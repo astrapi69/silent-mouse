@@ -2,6 +2,18 @@
 dependencies {
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+
+    implementation("com.miglayout:miglayout-swing:$miglayoutSwingVersion")
+    implementation("com.dorkbox:SystemTray:$systemTrayVersion")
+    implementation("io.github.astrapi69:model-data:$modelDataVersion")
+    implementation("io.github.astrapi69:icon-img-extensions:$iconImgExtensionsVersion")
+    implementation("io.github.astrapi69:silk-icon-theme:$silkIconThemeVersion")
+    implementation("io.github.astrapi69:swing-base-components:$swingBaseComponentsVersion")
+    implementation("io.github.astrapi69:swing-components:$swingComponentsVersion")
+    implementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
+    implementation("io.github.astrapi69:silly-bean:$sillyBeanVersion")
+    implementation("org.swinglabs.swingx:swingx-all:$swingxAllVersion")
+
     testCompileOnly("org.projectlombok:lombok:$lombokVersion")
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testImplementation("io.github.astrapi69:silly-io:$sillyIoVersion")

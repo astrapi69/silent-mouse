@@ -22,8 +22,27 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69;
+package io.github.astrapi69.silent.mouse;
 
-public class InitialTemplate
+public abstract class InterruptableThread extends Thread
 {
+	private boolean interrupted = false;
+
+	@Override
+	public void run()
+	{
+		while (!interrupted)
+		{
+			process();
+		}
+	}
+
+	@Override
+	public void interrupt()
+	{
+		super.interrupt();
+		interrupted = true;
+	}
+
+	protected abstract void process();
 }
