@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat
 def mainClassName = project.property('mainClass')
+def releaseVersion = !version.endsWith("SNAPSHOT")
 
 jar {
     manifest {
@@ -30,4 +31,37 @@ task withAllDependendiesJar(type: Jar) {
         exclude "META-INF/*.RSA"
     }
     with jar
+}
+
+tasks.register("signJar", Jar) {
+    mustRunAfter(withAllDependendiesJar)
+    def createIzPackInstallerStringProperty = project.property('createIzPackInstaller')
+    def createIzPackInstaller = createIzPackInstallerStringProperty.toBoolean()
+    if (releaseVersion || createIzPackInstaller) {
+        def pkAlias = project.property("$silentMouseKeyAlias")
+        def keystoreFileName = project.property("$silentMouseStoreFile")
+        def storePassword = project.property("$silentMouseStorePassword")
+        def keyPassword = project.property("$silentMouseKeyPassword")
+        def keystoreType = project.property("$silentMouseStoreType")
+        def libsFilePath = "$buildDir/libs"
+        def libFiles = files { file(libsFilePath).listFiles() }
+        def destDir = "$buildDir/signed"
+        def signedDir = new File(destDir)
+        signedDir.mkdirs()
+        libFiles.each {
+            ant.signjar(
+                    jar: it,
+                    destDir: "$destDir",
+                    alias: "$pkAlias",
+                    storetype: "$keystoreType",
+                    keystore: "$keystoreFileName",
+                    storepass: "$storePassword",
+                    keypass: "$keyPassword",
+                    preservelastmodified: "true"
+            )
+        }
+    } else {
+        println('Created jar file is not signed.\n' +
+                'IzPackInstaller can not be created because it depends on signed jar.')
+    }
 }

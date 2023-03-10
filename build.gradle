@@ -12,6 +12,7 @@ buildscript {
         classpath "io.freefair.gradle:lombok-plugin:$gradlePluginLombokVersion"
         classpath "com.github.ben-manes:gradle-versions-plugin:$gradlePluginVersionsVersion"
         classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:$licenseGradlePluginVersion"
+        classpath "com.bmuschko:gradle-izpack-plugin:$gradleIzpackPluginVersion"
         classpath "org.ajoberstar.grgit:grgit-gradle:$grgitGradlePluginVersion"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotlessGradlePluginVersion"
     }
@@ -19,6 +20,7 @@ buildscript {
 
 apply plugin: "io.freefair.lombok"
 apply plugin: "java"
+apply plugin: "com.bmuschko.izpack"
 apply plugin: "java-library"
 apply plugin: "maven-publish"
 apply plugin: "signing"
@@ -31,6 +33,7 @@ apply plugin: "com.diffplug.spotless"
 apply from: "gradle/dependencies.gradle"
 apply from: "gradle/formatting.gradle"
 apply from: "gradle/grgit.gradle"
+apply from: "gradle/izpack.gradle"
 apply from: "gradle/licensing.gradle"
 apply from: "gradle/packaging.gradle"
 apply from: "gradle/publishing.gradle"
