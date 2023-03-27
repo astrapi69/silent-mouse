@@ -37,7 +37,7 @@ tasks.register("signJar", Jar) {
     mustRunAfter(withAllDependendiesJar)
     def createIzPackInstallerStringProperty = project.property('createIzPackInstaller')
     def createIzPackInstaller = createIzPackInstallerStringProperty.toBoolean()
-    if (releaseVersion || createIzPackInstaller) {
+    if (createIzPackInstaller) {
         def pkAlias = project.property("$silentMouseKeyAlias")
         def keystoreFileName = project.property("$silentMouseStoreFile")
         def storePassword = project.property("$silentMouseStorePassword")
