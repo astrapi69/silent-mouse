@@ -1,10 +1,17 @@
 ## Change log
 ----------------------
 
-Version 1.1-SNAPSHOT
+Version 1.1
 -------------
 
+ADDED:
 
+- izpack for create installer for distribution
+
+CHANGED:
+
+- update gradle to new version 8.0.2
+- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle in version 6.17.0
 
 Version 1
 -------------
