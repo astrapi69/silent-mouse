@@ -4,7 +4,12 @@
 Version 1.2-SNAPSHOT
 -------------
 
+CHANGED:
 
+- update gradle to new version 8.1.1
+- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle in version 6.18.0
+- update of gradle-plugin dependency of org.ajoberstar.grgit:grgit-gradle to new version 5.2.0
+- update of dependency miglayout-swing to new minor version 11.1
 
 Version 1.1
 -------------
