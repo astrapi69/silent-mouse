@@ -24,24 +24,22 @@
  */
 package io.github.astrapi69.silent.mouse;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsModelBean
 {
 	private Integer xAxis = 1;
 	private Integer yAxis = 1;
 	private Integer intervalOfSeconds = 10;
 	private Integer intervalOfMouseMovementsCheckInSeconds = 5;
+	private boolean moveOnStartup = true;
 
 	public SettingsModelBean(Integer xAxis, Integer yAxis, Integer intervalOfSeconds,
-		Integer intervalOfMouseMovementsCheckInSeconds)
+		Integer intervalOfMouseMovementsCheckInSeconds, boolean moveOnStartup)
 	{
 		this.xAxis = xAxis;
 		this.yAxis = yAxis;
 		this.intervalOfSeconds = intervalOfSeconds;
 		this.intervalOfMouseMovementsCheckInSeconds = intervalOfMouseMovementsCheckInSeconds;
+		this.moveOnStartup = moveOnStartup;
 	}
 
 	public SettingsModelBean()
@@ -54,26 +52,32 @@ public class SettingsModelBean
 		this.yAxis = b.yAxis$value;
 		this.intervalOfSeconds = b.intervalOfSeconds$value;
 		this.intervalOfMouseMovementsCheckInSeconds = b.intervalOfMouseMovementsCheckInSeconds$value;
+		this.moveOnStartup = b.moveOnStartup$value;
 	}
 
-	private static Integer $default$xAxis()
+	static Integer $default$xAxis()
 	{
 		return 1;
 	}
 
-	private static Integer $default$yAxis()
+	static Integer $default$yAxis()
 	{
 		return 1;
 	}
 
-	private static Integer $default$intervalOfSeconds()
+	static Integer $default$intervalOfSeconds()
 	{
 		return 10;
 	}
 
-	private static Integer $default$intervalOfMouseMovementsCheckInSeconds()
+	static Integer $default$intervalOfMouseMovementsCheckInSeconds()
 	{
 		return 5;
+	}
+
+	static boolean $default$moveOnStartup()
+	{
+		return true;
 	}
 
 	public static SettingsModelBeanBuilder<?, ?> builder()
@@ -101,6 +105,11 @@ public class SettingsModelBean
 		return this.intervalOfMouseMovementsCheckInSeconds;
 	}
 
+	public boolean isMoveOnStartup()
+	{
+		return this.moveOnStartup;
+	}
+
 	public void setXAxis(Integer xAxis)
 	{
 		this.xAxis = xAxis;
@@ -120,6 +129,11 @@ public class SettingsModelBean
 		Integer intervalOfMouseMovementsCheckInSeconds)
 	{
 		this.intervalOfMouseMovementsCheckInSeconds = intervalOfMouseMovementsCheckInSeconds;
+	}
+
+	public void setMoveOnStartup(boolean moveOnStartup)
+	{
+		this.moveOnStartup = moveOnStartup;
 	}
 
 	public boolean equals(final Object o)
@@ -154,6 +168,8 @@ public class SettingsModelBean
 			: !this$intervalOfMouseMovementsCheckInSeconds
 				.equals(other$intervalOfMouseMovementsCheckInSeconds))
 			return false;
+		if (this.isMoveOnStartup() != other.isMoveOnStartup())
+			return false;
 		return true;
 	}
 
@@ -177,6 +193,7 @@ public class SettingsModelBean
 		result = result * PRIME + ($intervalOfMouseMovementsCheckInSeconds == null
 			? 43
 			: $intervalOfMouseMovementsCheckInSeconds.hashCode());
+		result = result * PRIME + (this.isMoveOnStartup() ? 79 : 97);
 		return result;
 	}
 
@@ -185,7 +202,8 @@ public class SettingsModelBean
 		return "SettingsModelBean(xAxis=" + this.getXAxis() + ", yAxis=" + this.getYAxis()
 			+ ", intervalOfSeconds=" + this.getIntervalOfSeconds()
 			+ ", intervalOfMouseMovementsCheckInSeconds="
-			+ this.getIntervalOfMouseMovementsCheckInSeconds() + ")";
+			+ this.getIntervalOfMouseMovementsCheckInSeconds() + ", moveOnStartup="
+			+ this.isMoveOnStartup() + ")";
 	}
 
 	public SettingsModelBeanBuilder<?, ?> toBuilder()
@@ -203,6 +221,8 @@ public class SettingsModelBean
 		boolean intervalOfSeconds$set;
 		Integer intervalOfMouseMovementsCheckInSeconds$value;
 		boolean intervalOfMouseMovementsCheckInSeconds$set;
+		boolean moveOnStartup$value;
+		boolean moveOnStartup$set;
 
 		private static void $fillValuesFromInstanceIntoBuilder(SettingsModelBean instance,
 			SettingsModelBeanBuilder<?, ?> b)
@@ -212,6 +232,7 @@ public class SettingsModelBean
 			b.intervalOfSeconds(instance.intervalOfSeconds);
 			b.intervalOfMouseMovementsCheckInSeconds(
 				instance.intervalOfMouseMovementsCheckInSeconds);
+			b.moveOnStartup(instance.moveOnStartup);
 		}
 
 		public B xAxis(Integer xAxis)
@@ -243,6 +264,13 @@ public class SettingsModelBean
 			return self();
 		}
 
+		public B moveOnStartup(boolean moveOnStartup)
+		{
+			this.moveOnStartup$value = moveOnStartup;
+			this.moveOnStartup$set = true;
+			return self();
+		}
+
 		protected B $fillValuesFrom(C instance)
 		{
 			SettingsModelBeanBuilder.$fillValuesFromInstanceIntoBuilder(instance, this);
@@ -258,7 +286,8 @@ public class SettingsModelBean
 			return "SettingsModelBean.SettingsModelBeanBuilder(xAxis$value=" + this.xAxis$value
 				+ ", yAxis$value=" + this.yAxis$value + ", intervalOfSeconds$value="
 				+ this.intervalOfSeconds$value + ", intervalOfMouseMovementsCheckInSeconds$value="
-				+ this.intervalOfMouseMovementsCheckInSeconds$value + ")";
+				+ this.intervalOfMouseMovementsCheckInSeconds$value + ", moveOnStartup$value="
+				+ this.moveOnStartup$value + ")";
 		}
 	}
 
@@ -293,6 +322,10 @@ public class SettingsModelBean
 			{
 				this.intervalOfMouseMovementsCheckInSeconds$value = SettingsModelBean
 					.$default$intervalOfMouseMovementsCheckInSeconds();
+			}
+			if (!this.moveOnStartup$set)
+			{
+				this.moveOnStartup$value = SettingsModelBean.$default$moveOnStartup();
 			}
 			SettingsModelBean settingsModelBean = new SettingsModelBean(this);
 			return settingsModelBean;

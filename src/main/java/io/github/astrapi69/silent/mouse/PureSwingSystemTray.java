@@ -86,7 +86,7 @@ public class PureSwingSystemTray
 			throw new RuntimeException("Unable to load SystemTray!");
 		}
 
-		systemTray.installShutdownHook();
+		// systemTray.installShutdownHook();
 		ImageIcon trayImageIcon = ImageIconFactory
 			.newImageIcon("io/github/astrapi69/silk/icons/anchor.png", "Keep moving");
 		Image image = trayImageIcon.getImage();

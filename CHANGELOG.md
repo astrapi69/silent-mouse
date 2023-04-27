@@ -10,6 +10,7 @@ CHANGED:
 - update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle in version 6.18.0
 - update of gradle-plugin dependency of org.ajoberstar.grgit:grgit-gradle to new version 5.2.0
 - update of dependency miglayout-swing to new minor version 11.1
+- moved dependency lombok to test dependencies
 
 Version 1.1
 -------------
