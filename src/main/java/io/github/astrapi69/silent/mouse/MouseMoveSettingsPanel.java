@@ -32,6 +32,8 @@ import java.util.Optional;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 
+import io.github.astrapi69.model.LambdaModel;
+import io.github.astrapi69.swing.component.JMCheckBox;
 import org.jetbrains.annotations.NotNull;
 
 import io.github.astrapi69.collection.array.ArrayFactory;
@@ -55,8 +57,10 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	private JLabel lblSettings;
 	private JLabel lblVariableX;
 	private JLabel lblVariableY;
+	private JLabel lblMoveOnStartup;
 	private JMTextField txtIntervalOfSeconds;
 	private JMTextField txtIntervalOfMouseMovementsCheckInSeconds;
+	private JMCheckBox checkBoxMoveOnStartup;
 
 	public MouseMoveSettingsPanel()
 	{
@@ -85,6 +89,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		txtIntervalOfSeconds.setDocument(new NumberValuesDocument());
 		txtIntervalOfMouseMovementsCheckInSeconds = new JMTextField();
 		txtIntervalOfMouseMovementsCheckInSeconds.setDocument(new NumberValuesDocument());
+		checkBoxMoveOnStartup = new JMCheckBox("Moving mouse already from start");
 
 		lblVariableX.setText("Move mouse on X axis in pixel");
 
@@ -95,6 +100,10 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		lblIntervalOfSeconds.setText("Move mouse every time (in seconds)");
 		lblIntervalOfMouseMovementsCheckInSeconds
 			.setText("Check mouse movement every time (in seconds)");
+
+		final IModel<Boolean> booleanModel =
+			LambdaModel.of(getModelObject()::isMoveOnStartup, getModelObject()::setMoveOnStartup);
+		checkBoxMoveOnStartup.setPropertyModel(booleanModel);
 
 		cmbVariableX.setModel(new DefaultComboBoxModel<>(new Integer[] { 1, 2, 3, 4 }));
 		cmbVariableX.setName("cmbVariableX");
@@ -191,6 +200,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		this.setLayout(layout);
 		this.add(lblSettings, "wrap");
 
+		this.add(checkBoxMoveOnStartup, "wrap");
 		this.add(lblVariableX);
 		this.add(cmbVariableX, "wrap");
 

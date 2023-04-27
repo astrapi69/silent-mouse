@@ -48,7 +48,7 @@ public class PureSwingSystemTray
 
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
 	static SettingsModelBean settingsModelBean = SettingsModelBean.builder().intervalOfSeconds(180)
-		.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).build();
+		.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(true).build();
 	static MouseMoveSettingsPanel panel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
 	static Robot robot;
@@ -103,6 +103,11 @@ public class PureSwingSystemTray
 			systemTray.shutdown();
 			System.exit(0);
 		});
+
+		if(settingsModelBean.isMoveOnStartup()){
+			startMoving(stopItem, startItem);
+			systemTray.setStatus("Moving around");
+		}
 
 		aboutItem.setCallback(e -> {
 			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(panel, "Settings",
