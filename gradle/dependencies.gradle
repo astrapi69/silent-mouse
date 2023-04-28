@@ -5,6 +5,7 @@ dependencies {
     implementation("com.miglayout:miglayout-swing:$miglayoutSwingVersion")
     implementation("com.dorkbox:SystemTray:$systemTrayVersion")
     implementation("io.github.astrapi69:model-data:$modelDataVersion")
+    implementation("io.github.astrapi69:component-model:$componentModelVersion")
     implementation("io.github.astrapi69:icon-img-extensions:$iconImgExtensionsVersion")
     implementation("io.github.astrapi69:silk-icon-theme:$silkIconThemeVersion")
     implementation("io.github.astrapi69:swing-base-components:$swingBaseComponentsVersion")

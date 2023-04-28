@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.prefs.Preferences;
 
 import javax.swing.*;
 
@@ -48,10 +49,12 @@ public class PureSwingSystemTray
 
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
 	static SettingsModelBean settingsModelBean = SettingsModelBean.builder().intervalOfSeconds(180)
-		.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(true).build();
+		.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false).build();
+
 	static MouseMoveSettingsPanel panel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
 	static Robot robot;
+
 
 	static Robot getRobot()
 	{
@@ -71,12 +74,14 @@ public class PureSwingSystemTray
 
 	public static void main(final String[] args)
 	{
+
 		final JFrame frame = new JFrame("MouseTrayApp");
 		initializeComponents();
 		frame.setExtendedState(JFrame.ICONIFIED);
 		frame.pack();
 		frame.setVisible(false);
 	}
+
 
 	private static void initializeComponents()
 	{
@@ -104,7 +109,8 @@ public class PureSwingSystemTray
 			System.exit(0);
 		});
 
-		if(settingsModelBean.isMoveOnStartup()){
+		if (settingsModelBean.isMoveOnStartup())
+		{
 			startMoving(stopItem, startItem);
 			systemTray.setStatus("Moving around");
 		}
