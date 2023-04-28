@@ -4,6 +4,10 @@
 Version 1.2-SNAPSHOT
 -------------
 
+ADDED:
+
+- new flag that indicates if the mouse moving from the start of the application
+
 CHANGED:
 
 - update gradle to new version 8.1.1

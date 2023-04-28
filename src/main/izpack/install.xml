@@ -1,72 +1,72 @@
-<izpack:installation version="5.0"
-					 xmlns:izpack="http://izpack.org/schema/installation"
-					 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-					 xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
-	<variables>
-		<variable name="appGroup" value="@{app.group}"/>
-		<variable name="appTitle" value="@{app.title}"/>
-		<variable name="appName" value="@{app.name}"/>
-		<variable name="appSubPath" value="@{app.subpath}"/>
-		<variable name="appVersion" value="@{app.version}"/>
-		<variable name="RESOURCEROOT" value="src/main/izpack" />
-		<!-- pre-select desktop shortcut checkbox -->
-		<variable name="DesktopShortcutCheckboxEnabled" value="true" />
-	</variables>
+<izpack:installation xmlns:izpack="http://izpack.org/schema/installation"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     version="5.0"
+                     xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+    <variables>
+        <variable name="appGroup" value="@{app.group}"/>
+        <variable name="appTitle" value="@{app.title}"/>
+        <variable name="appName" value="@{app.name}"/>
+        <variable name="appSubPath" value="@{app.subpath}"/>
+        <variable name="appVersion" value="@{app.version}"/>
+        <variable name="RESOURCEROOT" value="src/main/izpack"/>
+        <!-- pre-select desktop shortcut checkbox -->
+        <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+    </variables>
 
-	<info>
-		<javaversion>11</javaversion>
-		<appname>silent-mouse</appname>
-		<appsubpath>app/silent-mouse</appsubpath>
-		<appversion>1.1</appversion>
-		<authors>
-			<author name="Asterios Raptis" email="asterios.raptis@gmx.net" />
-		</authors>
-		<url>https://github.com/astrapi69/silent-mouse</url>
-	</info>
+    <info>
+        <javaversion>11</javaversion>
+        <appname>silent-mouse</appname>
+        <appsubpath>app/silent-mouse</appsubpath>
+        <appversion>1.1</appversion>
+        <authors>
+            <author name="Asterios Raptis" email="asterios.raptis@gmx.net"/>
+        </authors>
+        <url>https://github.com/astrapi69/silent-mouse</url>
+    </info>
 
-	<locale>
-		<langpack iso3="eng" />
-	</locale>
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
 
-	<guiprefs width="800" height="600" resizable="no">
-		<splash>images/peas_load.gif</splash>
-		<laf name="kunststoff">
-			<os family="windows" />
-			<os family="unix" />
-			<param name="variant" value="mist-silver" />
-		</laf>
-		<laf name="kunststoff">
-			<os family="mac" />
-			<param name="variant" value="mist-aqua" />
-		</laf>
-		<modifier key="useHeadingPanel" value="yes" />
-	</guiprefs>
+    <guiprefs width="800" height="600" resizable="no">
+        <splash>images/peas_load.gif</splash>
+        <laf name="kunststoff">
+            <os family="windows"/>
+            <os family="unix"/>
+            <param name="variant" value="mist-silver"/>
+        </laf>
+        <laf name="kunststoff">
+            <os family="mac"/>
+            <param name="variant" value="mist-aqua"/>
+        </laf>
+        <modifier key="useHeadingPanel" value="yes"/>
+    </guiprefs>
 
-	<resources>
-		<res src="../README.md" id="HTMLInfoPanel.info" />
-		<res src="../LICENSE" id="LicencePanel.licence" />
-	</resources>
+    <resources>
+        <res src="../README.md" id="HTMLInfoPanel.info"/>
+        <res src="../LICENSE" id="LicencePanel.licence"/>
+    </resources>
 
-	<panels>		
-		<panel classname="HelloPanel"/>
-		<panel classname="HTMLInfoPanel"/>
-		<panel classname="LicencePanel"/>
-		<panel classname="TargetPanel"/>
-		<panel classname="PacksPanel"/>
-		<panel classname="InstallPanel"/>
-		<panel classname="SimpleFinishPanel"/>
-	</panels>
+    <panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="HTMLInfoPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
 
-	<packs>
-		<pack name="executables" required="yes">
-			<description>The executables</description>
-			<file src="../CHANGELOG.md" targetdir="${INSTALL_PATH}" />
-			<file src="../LICENSE" targetdir="${INSTALL_PATH}" />
-			<singlefile src="libs/@{app.name}-@{app.version}-all.jar" target="${INSTALL_PATH}/@{app.name}.jar" />
-			<file src="../README.md" targetdir="${INSTALL_PATH}" />
-			<file src="resources/main/doc/start.sh" targetdir="${INSTALL_PATH}" />
-			<file src="resources/main/doc/start.bat" targetdir="${INSTALL_PATH}" />
-		</pack>
-	</packs>
+    <packs>
+        <pack name="executables" required="yes">
+            <description>The executables</description>
+            <file src="../CHANGELOG.md" targetdir="${INSTALL_PATH}"/>
+            <file src="../LICENSE" targetdir="${INSTALL_PATH}"/>
+            <singlefile src="libs/@{app.name}-@{app.version}-all.jar" target="${INSTALL_PATH}/@{app.name}.jar"/>
+            <file src="../README.md" targetdir="${INSTALL_PATH}"/>
+            <file src="resources/main/doc/start.sh" targetdir="${INSTALL_PATH}"/>
+            <file src="resources/main/doc/start.bat" targetdir="${INSTALL_PATH}"/>
+        </pack>
+    </packs>
 
 </izpack:installation>

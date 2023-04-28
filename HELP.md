@@ -32,6 +32,7 @@ looks for instance like this:
 ossrhUsername=YourSonatypeUsername
 ossrhPassword=YourSecretSonatypePassword
 ```
+
 (Note that you have to replace 'YourSonatypeUsername' and 'YourSecretSonatypePassword' with your corresponding username
 and password)
 
@@ -43,11 +44,11 @@ For setting secrets for your repository you can consider the following sections:
 * [Creating encrypted secrets for a repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository)
 * [Creating encrypted secrets for an organization](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-an-organization)
 
-Beware in step where you set the name you have to set for 'ossrhUsername' the value: 'ossrhUsername' and not 'OSSRHUSERNAME'
+Beware in step where you set the name you have to set for 'ossrhUsername' the value: 'ossrhUsername' and not '
+OSSRHUSERNAME'
 The same procedure for the secret 'ossrhPassword'
 
 Note that for organizations you only need to set the secrets once.
-
 
 The following source code is the complete gradle.yml in the repository folder '.github/workflows'
 

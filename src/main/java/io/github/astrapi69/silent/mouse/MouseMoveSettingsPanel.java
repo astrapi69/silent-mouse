@@ -3,24 +3,20 @@
  *
  * Copyright (C) 2022 Asterios Raptis
  *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package io.github.astrapi69.silent.mouse;
 
@@ -30,8 +26,10 @@ import java.awt.event.FocusEvent;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
+import javax.swing.*;
+
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,8 +44,6 @@ import io.github.astrapi69.swing.component.JMCheckBox;
 import io.github.astrapi69.swing.component.JMComboBox;
 import io.github.astrapi69.swing.component.JMTextField;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
-import lombok.Getter;
-import net.miginfocom.swing.MigLayout;
 
 @Getter
 public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
@@ -58,6 +54,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	public static final String X_AXIS = "xAxis";
 	public static final String Y_AXIS = "yAxis";
 	public static final String MOVE_ON_STARTUP = "moveOnStartup";
+	private static Preferences applicationPreferences = Preferences.userRoot()
+		.node(PureSwingSystemTray.class.getName());
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableX;
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableY;
 	private JLabel lblIntervalOfSeconds;
@@ -70,14 +68,6 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	private JMTextField txtIntervalOfMouseMovementsCheckInSeconds;
 	private JMCheckBox checkBoxMoveOnStartup;
 
-	public static Preferences getApplicationPreferences()
-	{
-		return applicationPreferences;
-	}
-
-	private static Preferences applicationPreferences = Preferences.userRoot()
-		.node(PureSwingSystemTray.class.getName());
-
 	public MouseMoveSettingsPanel()
 	{
 		this(BaseModel.of(SettingsModelBean.builder().build()));
@@ -86,6 +76,23 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	public MouseMoveSettingsPanel(final IModel<SettingsModelBean> model)
 	{
 		super(model);
+	}
+
+	public static Preferences getApplicationPreferences()
+	{
+		return applicationPreferences;
+	}
+
+	@NotNull
+	private static Optional<IModel<String>> getJMTextFieldModel(ActionEvent actionEvent)
+	{
+		if (actionEvent.getSource() instanceof JMTextField)
+		{
+			JMTextField source = (JMTextField)actionEvent.getSource();
+			IModel<String> propertyModel = source.getPropertyModel();
+			return Optional.of(propertyModel);
+		}
+		return Optional.empty();
 	}
 
 	private void initializeModelWithPreferences()
@@ -263,18 +270,6 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			getApplicationPreferences().put(INTERVAL_OF_SECONDS,
 				getModelObject().getIntervalOfSeconds().toString());
 		});
-	}
-
-	@NotNull
-	private static Optional<IModel<String>> getJMTextFieldModel(ActionEvent actionEvent)
-	{
-		if (actionEvent.getSource() instanceof JMTextField)
-		{
-			JMTextField source = (JMTextField)actionEvent.getSource();
-			IModel<String> propertyModel = source.getPropertyModel();
-			return Optional.of(propertyModel);
-		}
-		return Optional.empty();
 	}
 
 	protected void onChangeTxtIntervalOfMouseMovementsCheckInSeconds(final ActionEvent actionEvent)

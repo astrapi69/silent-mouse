@@ -1,4 +1,3 @@
-
 dependencies {
     izpack("org.codehaus.izpack:izpack-ant:$izpackVersion")
 
