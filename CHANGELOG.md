@@ -7,6 +7,7 @@ Version 1.2-SNAPSHOT
 ADDED:
 
 - new flag that indicates if the mouse moving from the start of the application
+- application model is now saved to java preferences
 
 CHANGED:
 
