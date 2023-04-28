@@ -28,9 +28,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.*;
 
-import lombok.Getter;
-import net.miginfocom.swing.MigLayout;
-
 import org.jetbrains.annotations.NotNull;
 
 import io.github.astrapi69.collection.array.ArrayFactory;
@@ -44,6 +41,8 @@ import io.github.astrapi69.swing.component.JMCheckBox;
 import io.github.astrapi69.swing.component.JMComboBox;
 import io.github.astrapi69.swing.component.JMTextField;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
 
 @Getter
 public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
