@@ -3,7 +3,6 @@
 <div style="text-align: center">
 
 [![Java CI with Gradle](https://github.com/astrapi69/silent-mouse/actions/workflows/gradle.yml/badge.svg)](https://github.com/astrapi69/silent-mouse/actions/workflows/gradle.yml)
-[![Coverage Status](https://codecov.io/gh/astrapi69/silent-mouse/branch/develop/graph/badge.svg)](https://codecov.io/gh/astrapi69/silent-mouse)
 [![Open Issues](https://img.shields.io/github/issues/astrapi69/silent-mouse.svg?style=flat)](https://github.com/astrapi69/silent-mouse/issues)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.astrapi69/silent-mouse/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.astrapi69/silent-mouse)
 [![Javadocs](http://www.javadoc.io/badge/io.github.astrapi69/silent-mouse.svg)](http://www.javadoc.io/doc/io.github.astrapi69/silent-mouse)
