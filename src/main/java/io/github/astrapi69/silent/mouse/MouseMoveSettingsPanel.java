@@ -31,6 +31,7 @@ import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
 
 import io.github.astrapi69.collection.array.ArrayFactory;
+import io.github.astrapi69.collection.pair.ValueBox;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.model.LambdaModel;
 import io.github.astrapi69.model.api.IModel;
@@ -53,7 +54,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	public static final String X_AXIS = "xAxis";
 	public static final String Y_AXIS = "yAxis";
 	public static final String MOVE_ON_STARTUP = "moveOnStartup";
-	private static Preferences applicationPreferences = Preferences.userRoot()
+	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableX;
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableY;
@@ -62,15 +63,9 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	private JLabel lblSettings;
 	private JLabel lblVariableX;
 	private JLabel lblVariableY;
-	private JLabel lblMoveOnStartup;
 	private JMTextField txtIntervalOfSeconds;
 	private JMTextField txtIntervalOfMouseMovementsCheckInSeconds;
 	private JMCheckBox checkBoxMoveOnStartup;
-
-	public MouseMoveSettingsPanel()
-	{
-		this(BaseModel.of(SettingsModelBean.builder().build()));
-	}
 
 	public MouseMoveSettingsPanel(final IModel<SettingsModelBean> model)
 	{
@@ -88,13 +83,28 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		if (actionEvent.getSource() instanceof JMTextField)
 		{
 			JMTextField source = (JMTextField)actionEvent.getSource();
+			String sourceText = source.getText();
 			IModel<String> propertyModel = source.getPropertyModel();
+			propertyModel.setObject(sourceText);
 			return Optional.of(propertyModel);
 		}
 		return Optional.empty();
 	}
 
 	private void initializeModelWithPreferences()
+	{
+		SettingsModelBean modelObject = getModelObject();
+		if (modelObject == null)
+		{
+			modelObject = SettingsModelBean.builder().intervalOfSeconds(180)
+				.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
+				.build();
+			setModel(BaseModel.of(modelObject));
+		}
+		setModelFromPreferences(modelObject);
+	}
+
+	private static void setModelFromPreferences(SettingsModelBean modelObject)
 	{
 		String xAxisAsString = applicationPreferences.get(X_AXIS, NOT_SET);
 		if (NOT_SET.equals(xAxisAsString))
@@ -103,7 +113,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		}
 		else
 		{
-			getModelObject().setXAxis(Integer.valueOf(xAxisAsString));
+			modelObject.setXAxis(Integer.valueOf(xAxisAsString));
 		}
 
 		String yAxisAsString = applicationPreferences.get(Y_AXIS, NOT_SET);
@@ -113,7 +123,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		}
 		else
 		{
-			getModelObject().setYAxis(Integer.valueOf(yAxisAsString));
+			modelObject.setYAxis(Integer.valueOf(yAxisAsString));
 		}
 
 		String intervalOfSecondsAsString = applicationPreferences.get(INTERVAL_OF_SECONDS, NOT_SET);
@@ -123,7 +133,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		}
 		else
 		{
-			getModelObject().setIntervalOfSeconds(Integer.valueOf(intervalOfSecondsAsString));
+			modelObject.setIntervalOfSeconds(Integer.valueOf(intervalOfSecondsAsString));
 		}
 
 		String intervalOfMouseMovementsCheckInSecondsAsString = applicationPreferences
@@ -134,7 +144,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		}
 		else
 		{
-			getModelObject().setIntervalOfMouseMovementsCheckInSeconds(
+			modelObject.setIntervalOfMouseMovementsCheckInSeconds(
 				Integer.valueOf(intervalOfMouseMovementsCheckInSecondsAsString));
 		}
 
@@ -146,7 +156,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		else
 		{
 			Boolean moveOnStartup = Boolean.valueOf(moveOnStartupAsString);
-			getModelObject().setMoveOnStartup(moveOnStartup);
+			modelObject.setMoveOnStartup(moveOnStartup);
 		}
 	}
 
@@ -159,13 +169,18 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		lblVariableY = new JLabel();
 		lblIntervalOfSeconds = new JLabel();
 		lblIntervalOfMouseMovementsCheckInSeconds = new JLabel();
-		Integer[] cmbArray = ArrayFactory.newArray(1, 2, 3, 4);
 		cmbVariableX = new JMComboBox<>(
-			new GenericComboBoxModel<>(ArrayFactory.newArray(1, 2, 3, 4)));
+			new GenericComboBoxModel<>(ArrayFactory.newArray(1, 2, 3, 4)),
+			LambdaModel.of(getModelObject()::getXAxis, getModelObject()::setXAxis));
 		cmbVariableY = new JMComboBox<>(
-			new GenericComboBoxModel<>(ArrayFactory.newArray(1, 2, 3, 4)));
+			new GenericComboBoxModel<>(ArrayFactory.newArray(1, 2, 3, 4)),
+			LambdaModel.of(getModelObject()::getYAxis, getModelObject()::setYAxis));
 		txtIntervalOfSeconds = new JMTextField();
 		txtIntervalOfSeconds.setDocument(new NumberValuesDocument());
+		ValueBox<String> intervalOfSecondsAsStringBox = ValueBox.<String> builder()
+			.value(getModelObject().getIntervalOfSeconds().toString()).build();
+		txtIntervalOfSeconds.setPropertyModel(LambdaModel.of(intervalOfSecondsAsStringBox::getValue,
+			intervalOfSecondsAsStringBox::setValue));
 		txtIntervalOfMouseMovementsCheckInSeconds = new JMTextField();
 		txtIntervalOfMouseMovementsCheckInSeconds.setDocument(new NumberValuesDocument());
 		checkBoxMoveOnStartup = new JMCheckBox("Moving mouse already from start");
@@ -186,20 +201,18 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			checkedModelBean::setChecked);
 		checkBoxMoveOnStartup.setPropertyModel(booleanModel);
 		checkBoxMoveOnStartup.setSelected(getModelObject().isMoveOnStartup());
-		boolean selected = checkBoxMoveOnStartup.isSelected();
 		checkBoxMoveOnStartup.setName("checkBoxMoveOnStartup");
 		checkBoxMoveOnStartup.addActionListener(this::onChangeCheckboxMoveOnStartup);
 
-		cmbVariableX.setModel(new DefaultComboBoxModel<>(new Integer[] { 1, 2, 3, 4 }));
 		cmbVariableX.setName("cmbVariableX");
-
 		cmbVariableX.addActionListener(this::onChangeCmbVariableX);
+
 		cmbVariableY.setName("cmbVariableY");
 		cmbVariableY.addActionListener(this::onChangeCmbVariableY);
-
-		txtIntervalOfSeconds.setText(getModelObject().getIntervalOfSeconds() != null
+		String interalOfSecondsAsString = getModelObject().getIntervalOfSeconds() != null
 			? getModelObject().getIntervalOfSeconds().toString()
-			: "180");
+			: "180";
+		txtIntervalOfSeconds.setText(interalOfSecondsAsString);
 		txtIntervalOfSeconds.setName("txtIntervalOfSeconds");
 		txtIntervalOfSeconds.addActionListener(this::onChangeTxtIntervalOfSeconds);
 		txtIntervalOfSeconds.addFocusListener(new FocusAdapter()
@@ -210,13 +223,17 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfSeconds(Integer.valueOf(text));
+
+				getApplicationPreferences().put(INTERVAL_OF_SECONDS,
+					getModelObject().getIntervalOfSeconds().toString());
 			}
 		});
-
-		txtIntervalOfMouseMovementsCheckInSeconds
-			.setText(getModelObject().getIntervalOfMouseMovementsCheckInSeconds() != null
+		String intervalOfMouseMovementsCheckInSecondsAsString = getModelObject()
+			.getIntervalOfMouseMovementsCheckInSeconds() != null
 				? getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString()
-				: "90");
+				: "90";
+		txtIntervalOfMouseMovementsCheckInSeconds
+			.setText(intervalOfMouseMovementsCheckInSecondsAsString);
 		txtIntervalOfMouseMovementsCheckInSeconds
 			.setName("txtIntervalOfMouseMovementsCheckInSeconds");
 		txtIntervalOfMouseMovementsCheckInSeconds
@@ -229,6 +246,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfMouseMovementsCheckInSeconds(Integer.valueOf(text));
+				getApplicationPreferences().put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
+					getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString());
 			}
 		});
 	}

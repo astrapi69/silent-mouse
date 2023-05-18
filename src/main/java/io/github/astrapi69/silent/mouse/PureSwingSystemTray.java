@@ -25,6 +25,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import javax.swing.*;
 
@@ -40,13 +43,23 @@ import io.github.astrapi69.swing.robot.MouseExtensions;
 
 public class PureSwingSystemTray
 {
+	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
 
+	public static final String NOT_SET = "not set";
+	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
+	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
+	public static final String X_AXIS = "xAxis";
+	public static final String Y_AXIS = "yAxis";
+	public static final String MOVE_ON_STARTUP = "moveOnStartup";
+	private static Preferences applicationPreferences = Preferences.userRoot()
+		.node(PureSwingSystemTray.class.getName());
 	static InterruptableThread currentExecutionThread;
 	static InterruptableThread mouseTrackThread;
 
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
-	static SettingsModelBean settingsModelBean = SettingsModelBean.builder().intervalOfSeconds(180)
-		.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false).build();
+	static SettingsModelBean settingsModelBean = setModelFromPreferences(SettingsModelBean.builder()
+		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
+		.moveOnStartup(false).build());
 
 	static MouseMoveSettingsPanel panel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
@@ -69,9 +82,66 @@ public class PureSwingSystemTray
 		return robot;
 	}
 
+	private static SettingsModelBean setModelFromPreferences(SettingsModelBean modelObject)
+	{
+		String xAxisAsString = applicationPreferences.get(X_AXIS, NOT_SET);
+		if (NOT_SET.equals(xAxisAsString))
+		{
+			applicationPreferences.put(X_AXIS, "1");
+		}
+		else
+		{
+			modelObject.setXAxis(Integer.valueOf(xAxisAsString));
+		}
+
+		String yAxisAsString = applicationPreferences.get(Y_AXIS, NOT_SET);
+		if (NOT_SET.equals(yAxisAsString))
+		{
+			applicationPreferences.put(Y_AXIS, "1");
+		}
+		else
+		{
+			modelObject.setYAxis(Integer.valueOf(yAxisAsString));
+		}
+
+		String intervalOfSecondsAsString = applicationPreferences.get(INTERVAL_OF_SECONDS, NOT_SET);
+		if (NOT_SET.equals(intervalOfSecondsAsString))
+		{
+			applicationPreferences.put(INTERVAL_OF_SECONDS, "180");
+		}
+		else
+		{
+			modelObject.setIntervalOfSeconds(Integer.valueOf(intervalOfSecondsAsString));
+		}
+
+		String intervalOfMouseMovementsCheckInSecondsAsString = applicationPreferences
+			.get(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, NOT_SET);
+		if (NOT_SET.equals(intervalOfMouseMovementsCheckInSecondsAsString))
+		{
+			applicationPreferences.put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, "90");
+		}
+		else
+		{
+			modelObject.setIntervalOfMouseMovementsCheckInSeconds(
+				Integer.valueOf(intervalOfMouseMovementsCheckInSecondsAsString));
+		}
+
+		String moveOnStartupAsString = applicationPreferences.get(MOVE_ON_STARTUP, NOT_SET);
+		if (NOT_SET.equals(moveOnStartupAsString))
+		{
+			applicationPreferences.put(MOVE_ON_STARTUP, "false");
+		}
+		else
+		{
+			Boolean moveOnStartup = Boolean.valueOf(moveOnStartupAsString);
+			modelObject.setMoveOnStartup(moveOnStartup);
+		}
+		return modelObject;
+	}
+
 	public static void main(final String[] args)
 	{
-
+		logger.setLevel(Level.FINE);
 		final JFrame frame = new JFrame("MouseTrayApp");
 		initializeComponents();
 		frame.setExtendedState(JFrame.ICONIFIED);
@@ -199,7 +269,9 @@ public class PureSwingSystemTray
 					}
 					catch (InterruptedException ex)
 					{
-						throw new RuntimeException(ex);
+						logger.log(Level.INFO,
+							"Mouse tracking has thrown exeption with the following message:"
+								+ ex.getLocalizedMessage());
 					}
 				}
 			}
@@ -211,8 +283,6 @@ public class PureSwingSystemTray
 			{
 				while (!isInterrupted())
 				{
-					try
-					{
 						final Map.Entry<LocalDateTime, Point> lastTrackedMousePointEntry = mouseTracks
 							.lastEntry();
 						final Point currentMousePosition = MouseExtensions.getMousePosition();
@@ -226,13 +296,34 @@ public class PureSwingSystemTray
 								MouseExtensions.setMousePosition(getRobot(),
 									currentMousePosition.x + settingsModelBean.getXAxis(),
 									currentMousePosition.y + settingsModelBean.getYAxis());
-								Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
+								try
+								{
+									Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
+								}
+								catch (InterruptedException ex)
+								{
+									logger.log(Level.INFO,
+										"Set mouse position by tracking and went to sleep"
+											+ " has thrown exception with the following message:"
+											+ ex.getLocalizedMessage());
+								}
 							}
 							else
 							{
 								int diff = settingsModelBean.getIntervalOfSeconds()
 									- settingsModelBean.getIntervalOfMouseMovementsCheckInSeconds();
-								Thread.sleep(diff);
+								try
+								{
+									Thread.sleep(diff);
+								}
+								catch (InterruptedException e)
+								{
+									logger.log(Level.INFO,
+										"Go to sleep with the difference of 'interval of seconds'"
+											+ " and 'interval of mouse movements check'"
+											+ " has thrown exception with the following message:"
+											+ e.getLocalizedMessage());
+								}
 							}
 						}
 						else
@@ -240,14 +331,19 @@ public class PureSwingSystemTray
 							MouseExtensions.setMousePosition(getRobot(),
 								currentMousePosition.x + settingsModelBean.getXAxis(),
 								currentMousePosition.y + settingsModelBean.getYAxis());
-							Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
+							try
+							{
+								Thread.sleep(panel.getModelObject().getIntervalOfSeconds() * 1000);
+							}
+							catch (InterruptedException e)
+							{
+								logger.log(Level.INFO,
+									"Set mouse position by tracking and went to sleep"
+										+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
+										+ " has thrown exception with the following message:"
+										+ e.getLocalizedMessage());
+							}
 						}
-
-					}
-					catch (InterruptedException ex)
-					{
-						throw new RuntimeException(ex);
-					}
 				}
 			}
 		};
