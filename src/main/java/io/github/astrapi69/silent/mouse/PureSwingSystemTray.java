@@ -283,67 +283,66 @@ public class PureSwingSystemTray
 			{
 				while (!isInterrupted())
 				{
-						final Map.Entry<LocalDateTime, Point> lastTrackedMousePointEntry = mouseTracks
-							.lastEntry();
-						final Point currentMousePosition = MouseExtensions.getMousePosition();
-						if (lastTrackedMousePointEntry != null)
-						{
-							final Point lastTrackedMousePoint = lastTrackedMousePointEntry
-								.getValue();
-							// mouse not moved
-							if (lastTrackedMousePoint.equals(currentMousePosition))
-							{
-								MouseExtensions.setMousePosition(getRobot(),
-									currentMousePosition.x + settingsModelBean.getXAxis(),
-									currentMousePosition.y + settingsModelBean.getYAxis());
-								try
-								{
-									Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
-								}
-								catch (InterruptedException ex)
-								{
-									logger.log(Level.INFO,
-										"Set mouse position by tracking and went to sleep"
-											+ " has thrown exception with the following message:"
-											+ ex.getLocalizedMessage());
-								}
-							}
-							else
-							{
-								int diff = settingsModelBean.getIntervalOfSeconds()
-									- settingsModelBean.getIntervalOfMouseMovementsCheckInSeconds();
-								try
-								{
-									Thread.sleep(diff);
-								}
-								catch (InterruptedException e)
-								{
-									logger.log(Level.INFO,
-										"Go to sleep with the difference of 'interval of seconds'"
-											+ " and 'interval of mouse movements check'"
-											+ " has thrown exception with the following message:"
-											+ e.getLocalizedMessage());
-								}
-							}
-						}
-						else
+					final Map.Entry<LocalDateTime, Point> lastTrackedMousePointEntry = mouseTracks
+						.lastEntry();
+					final Point currentMousePosition = MouseExtensions.getMousePosition();
+					if (lastTrackedMousePointEntry != null)
+					{
+						final Point lastTrackedMousePoint = lastTrackedMousePointEntry.getValue();
+						// mouse not moved
+						if (lastTrackedMousePoint.equals(currentMousePosition))
 						{
 							MouseExtensions.setMousePosition(getRobot(),
 								currentMousePosition.x + settingsModelBean.getXAxis(),
 								currentMousePosition.y + settingsModelBean.getYAxis());
 							try
 							{
-								Thread.sleep(panel.getModelObject().getIntervalOfSeconds() * 1000);
+								Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
+							}
+							catch (InterruptedException ex)
+							{
+								logger.log(Level.INFO,
+									"Set mouse position by tracking and went to sleep"
+										+ " has thrown exception with the following message:"
+										+ ex.getLocalizedMessage());
+							}
+						}
+						else
+						{
+							int diff = settingsModelBean.getIntervalOfSeconds()
+								- settingsModelBean.getIntervalOfMouseMovementsCheckInSeconds();
+							try
+							{
+								Thread.sleep(diff);
 							}
 							catch (InterruptedException e)
 							{
 								logger.log(Level.INFO,
-									"Set mouse position by tracking and went to sleep"
-										+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
+									"Go to sleep with the difference of 'interval of seconds'"
+										+ " and 'interval of mouse movements check'"
 										+ " has thrown exception with the following message:"
 										+ e.getLocalizedMessage());
 							}
 						}
+					}
+					else
+					{
+						MouseExtensions.setMousePosition(getRobot(),
+							currentMousePosition.x + settingsModelBean.getXAxis(),
+							currentMousePosition.y + settingsModelBean.getYAxis());
+						try
+						{
+							Thread.sleep(panel.getModelObject().getIntervalOfSeconds() * 1000);
+						}
+						catch (InterruptedException e)
+						{
+							logger.log(Level.INFO,
+								"Set mouse position by tracking and went to sleep"
+									+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
+									+ " has thrown exception with the following message:"
+									+ e.getLocalizedMessage());
+						}
+					}
 				}
 			}
 		};
