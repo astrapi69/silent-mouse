@@ -34,6 +34,8 @@ import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.icon.ImageIconFactory;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
+import io.github.astrapi69.swing.panel.info.AppInfoPanel;
+import io.github.astrapi69.swing.panel.info.InfoModelBean;
 import io.github.astrapi69.swing.robot.MouseExtensions;
 
 public class PureSwingSystemTray
@@ -98,6 +100,7 @@ public class PureSwingSystemTray
 		MenuItem stopItem = new MenuItem("Stop");
 		MenuItem exitItem = new MenuItem("Exit");
 		MenuItem aboutItem = new MenuItem("About");
+		MenuItem settingsItem = new MenuItem("Settings");
 
 		exitItem.setCallback(e -> {
 			systemTray.shutdown();
@@ -110,7 +113,8 @@ public class PureSwingSystemTray
 			systemTray.setStatus("Moving around");
 		}
 
-		aboutItem.setCallback(e -> {
+
+		settingsItem.setCallback(e -> {
 			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(panel, "Settings",
 				panel.getCmbVariableX());
 			if (option == JOptionPane.OK_OPTION)
@@ -129,6 +133,25 @@ public class PureSwingSystemTray
 			}
 		});
 
+		aboutItem.setCallback(e -> {
+
+			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
+				.labelApplicationName("Application name:").labelCopyright("Copyright:")
+				.copyright("Asterios Raptis").labelVersion("Version:").version("1.3") // !!!
+																						// IMPORTANT
+																						// Change
+																						// version
+																						// on
+																						// deployment
+																						// IMPORTANT
+																						// !!!
+				.licence("This Software is licensed under the MIT Licence").build();
+			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
+			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel,
+				"About", null);
+
+		});
+
 		stopItem
 			.setEnabled(currentExecutionThread != null && !currentExecutionThread.isInterrupted());
 		stopItem.setCallback(e -> {
@@ -141,12 +164,14 @@ public class PureSwingSystemTray
 			systemTray.setStatus("Moving around");
 		});
 		// Add components to pop-up menu
-		systemTray.getMenu().add(aboutItem).setShortcut('q');
+		systemTray.getMenu().add(aboutItem).setShortcut('b');
+		systemTray.getMenu().add(settingsItem).setShortcut('t');
 		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(startItem);
-		systemTray.getMenu().add(stopItem);
+		systemTray.getMenu().add(startItem).setShortcut('a');
+		systemTray.getMenu().add(stopItem).setShortcut('s');
 		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(exitItem);
+		systemTray.getMenu().add(exitItem).setShortcut('e');
+		;
 	}
 
 	private static void startMoving(MenuItem stopItem, MenuItem startItem)

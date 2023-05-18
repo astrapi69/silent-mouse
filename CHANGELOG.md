@@ -4,7 +4,13 @@
 Version 1.3-SNAPSHOT
 -------------
 
+ADDED:
 
+- new menu entry for setting and new panel for the about menu
+
+CHANGED:
+
+- update of test dependency junit-jupiter-api to new milestone version 5.10.0-M1
 
 Version 1.2
 -------------
