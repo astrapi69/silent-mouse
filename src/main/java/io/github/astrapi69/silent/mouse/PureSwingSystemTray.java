@@ -203,7 +203,7 @@ public class PureSwingSystemTray
 
 			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
 				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis").labelVersion("Version:").version("1.3") // !!!
+				.copyright("Asterios Raptis").labelVersion("Version:").version("1.4") // !!!
 																						// IMPORTANT
 																						// Change
 																						// version
