@@ -43,28 +43,24 @@ import io.github.astrapi69.swing.robot.MouseExtensions;
 
 public class PureSwingSystemTray
 {
-	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
-
 	public static final String NOT_SET = "not set";
 	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
 	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
 	public static final String X_AXIS = "xAxis";
 	public static final String Y_AXIS = "yAxis";
 	public static final String MOVE_ON_STARTUP = "moveOnStartup";
-	private static Preferences applicationPreferences = Preferences.userRoot()
-		.node(PureSwingSystemTray.class.getName());
+	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
 	static InterruptableThread currentExecutionThread;
 	static InterruptableThread mouseTrackThread;
-
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
+	static Robot robot;
+	private static Preferences applicationPreferences = Preferences.userRoot()
+		.node(PureSwingSystemTray.class.getName());
 	static SettingsModelBean settingsModelBean = setModelFromPreferences(SettingsModelBean.builder()
 		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
 		.moveOnStartup(false).build());
-
 	static MouseMoveSettingsPanel panel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
-	static Robot robot;
-
 
 	static Robot getRobot()
 	{

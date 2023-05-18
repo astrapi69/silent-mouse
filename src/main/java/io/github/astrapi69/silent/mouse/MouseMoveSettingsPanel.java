@@ -91,19 +91,6 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		return Optional.empty();
 	}
 
-	private void initializeModelWithPreferences()
-	{
-		SettingsModelBean modelObject = getModelObject();
-		if (modelObject == null)
-		{
-			modelObject = SettingsModelBean.builder().intervalOfSeconds(180)
-				.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
-				.build();
-			setModel(BaseModel.of(modelObject));
-		}
-		setModelFromPreferences(modelObject);
-	}
-
 	private static void setModelFromPreferences(SettingsModelBean modelObject)
 	{
 		String xAxisAsString = applicationPreferences.get(X_AXIS, NOT_SET);
@@ -158,6 +145,19 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			Boolean moveOnStartup = Boolean.valueOf(moveOnStartupAsString);
 			modelObject.setMoveOnStartup(moveOnStartup);
 		}
+	}
+
+	private void initializeModelWithPreferences()
+	{
+		SettingsModelBean modelObject = getModelObject();
+		if (modelObject == null)
+		{
+			modelObject = SettingsModelBean.builder().intervalOfSeconds(180)
+				.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
+				.build();
+			setModel(BaseModel.of(modelObject));
+		}
+		setModelFromPreferences(modelObject);
 	}
 
 	@Override
