@@ -4,6 +4,13 @@
 Version 1.4-SNAPSHOT
 -------------
 
+CHANGED:
+
+- update gradle to new version 8.2-rc-2
+- update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin in version 0.47.0
+- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle in version 6.19.0
+- update of test dependency lombok to new version 1.18.28
+
 Version 1.3
 -------------
 

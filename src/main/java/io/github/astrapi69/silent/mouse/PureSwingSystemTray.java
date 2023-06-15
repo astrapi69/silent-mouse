@@ -59,7 +59,7 @@ public class PureSwingSystemTray
 	static SettingsModelBean settingsModelBean = setModelFromPreferences(SettingsModelBean.builder()
 		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
 		.moveOnStartup(false).build());
-	static MouseMoveSettingsPanel panel = new MouseMoveSettingsPanel(
+	static MouseMoveSettingsPanel mouseMoveSettingsPanel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
 
 	static Robot getRobot()
@@ -181,16 +181,17 @@ public class PureSwingSystemTray
 
 
 		settingsItem.setCallback(e -> {
-			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(panel, "Settings",
-				panel.getCmbVariableX());
+			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(
+				mouseMoveSettingsPanel, "Settings",
+				mouseMoveSettingsPanel.getCmbVariableX());
 			if (option == JOptionPane.OK_OPTION)
 			{
-				final String text = panel.getTxtIntervalOfSeconds().getText();
+				final String text = mouseMoveSettingsPanel.getTxtIntervalOfSeconds().getText();
 				if (text != null)
 				{
 					settingsModelBean.setIntervalOfSeconds(Integer.valueOf(text));
 				}
-				settingsModelBean = panel.getModelObject();
+				settingsModelBean = mouseMoveSettingsPanel.getModelObject();
 				if (currentExecutionThread != null && currentExecutionThread.isAlive())
 				{
 					stopMoving(stopItem, startItem);
@@ -328,7 +329,8 @@ public class PureSwingSystemTray
 							currentMousePosition.y + settingsModelBean.getYAxis());
 						try
 						{
-							Thread.sleep(panel.getModelObject().getIntervalOfSeconds() * 1000);
+							Thread.sleep(
+								mouseMoveSettingsPanel.getModelObject().getIntervalOfSeconds() * 1000);
 						}
 						catch (InterruptedException e)
 						{
