@@ -31,6 +31,11 @@ import lombok.experimental.SuperBuilder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsModelBean
 {
+	public static final String X_AXIS = "xAxis";
+	public static final String Y_AXIS = "yAxis";
+	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
+	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
+	public static final String MOVE_ON_STARTUP = "moveOnStartup";
 	@Builder.Default
 	Integer xAxis = 1;
 	@Builder.Default

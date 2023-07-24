@@ -54,7 +54,7 @@ public class PureSwingSystemTray
 	static InterruptableThread mouseTrackThread;
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
 	static Robot robot;
-	private static Preferences applicationPreferences = Preferences.userRoot()
+	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
 	static SettingsModelBean settingsModelBean = setModelFromPreferences(SettingsModelBean.builder()
 		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
@@ -129,7 +129,7 @@ public class PureSwingSystemTray
 		}
 		else
 		{
-			Boolean moveOnStartup = Boolean.valueOf(moveOnStartupAsString);
+			boolean moveOnStartup = Boolean.parseBoolean(moveOnStartupAsString);
 			modelObject.setMoveOnStartup(moveOnStartup);
 		}
 		return modelObject;
@@ -182,8 +182,7 @@ public class PureSwingSystemTray
 
 		settingsItem.setCallback(e -> {
 			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(
-				mouseMoveSettingsPanel, "Settings",
-				mouseMoveSettingsPanel.getCmbVariableX());
+				mouseMoveSettingsPanel, "Settings", mouseMoveSettingsPanel.getCmbVariableX());
 			if (option == JOptionPane.OK_OPTION)
 			{
 				final String text = mouseMoveSettingsPanel.getTxtIntervalOfSeconds().getText();
@@ -204,7 +203,8 @@ public class PureSwingSystemTray
 
 			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
 				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis").labelVersion("Version:").version("1.4") // !!!
+				.copyright("Asterios Raptis").labelVersion("Version:")
+				.version("1.4") // !!!
 																						// IMPORTANT
 																						// Change
 																						// version
@@ -214,9 +214,7 @@ public class PureSwingSystemTray
 																						// !!!
 				.licence("This Software is licensed under the MIT Licence").build();
 			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
-			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel,
-				"About", null);
-
+			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
 		});
 
 		stopItem
@@ -330,7 +328,8 @@ public class PureSwingSystemTray
 						try
 						{
 							Thread.sleep(
-								mouseMoveSettingsPanel.getModelObject().getIntervalOfSeconds() * 1000);
+								mouseMoveSettingsPanel.getModelObject().getIntervalOfSeconds()
+									* 1000);
 						}
 						catch (InterruptedException e)
 						{
