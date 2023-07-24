@@ -43,12 +43,6 @@ import io.github.astrapi69.swing.panel.info.InfoModelBean;
 
 public class PureSwingSystemTray
 {
-	public static final String NOT_SET = "not set";
-	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
-	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
-	public static final String X_AXIS = "xAxis";
-	public static final String Y_AXIS = "yAxis";
-	public static final String MOVE_ON_STARTUP = "moveOnStartup";
 	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
 	static InterruptableThread currentExecutionThread;
 	static InterruptableThread mouseTrackThread;
@@ -56,9 +50,10 @@ public class PureSwingSystemTray
 	static Robot robot;
 	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
-	static SettingsModelBean settingsModelBean = setModelFromPreferences(SettingsModelBean.builder()
-		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
-		.moveOnStartup(false).build());
+	static SettingsModelBean settingsModelBean = SettingsModelBean
+		.setModelFromPreferences(SettingsModelBean.builder().intervalOfSeconds(180)
+			.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
+			.build(), applicationPreferences);
 	static MouseMoveSettingsPanel mouseMoveSettingsPanel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
 
@@ -76,63 +71,6 @@ public class PureSwingSystemTray
 			}
 		}
 		return robot;
-	}
-
-	private static SettingsModelBean setModelFromPreferences(SettingsModelBean modelObject)
-	{
-		String xAxisAsString = applicationPreferences.get(X_AXIS, NOT_SET);
-		if (NOT_SET.equals(xAxisAsString))
-		{
-			applicationPreferences.put(X_AXIS, "1");
-		}
-		else
-		{
-			modelObject.setXAxis(Integer.valueOf(xAxisAsString));
-		}
-
-		String yAxisAsString = applicationPreferences.get(Y_AXIS, NOT_SET);
-		if (NOT_SET.equals(yAxisAsString))
-		{
-			applicationPreferences.put(Y_AXIS, "1");
-		}
-		else
-		{
-			modelObject.setYAxis(Integer.valueOf(yAxisAsString));
-		}
-
-		String intervalOfSecondsAsString = applicationPreferences.get(INTERVAL_OF_SECONDS, NOT_SET);
-		if (NOT_SET.equals(intervalOfSecondsAsString))
-		{
-			applicationPreferences.put(INTERVAL_OF_SECONDS, "180");
-		}
-		else
-		{
-			modelObject.setIntervalOfSeconds(Integer.valueOf(intervalOfSecondsAsString));
-		}
-
-		String intervalOfMouseMovementsCheckInSecondsAsString = applicationPreferences
-			.get(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, NOT_SET);
-		if (NOT_SET.equals(intervalOfMouseMovementsCheckInSecondsAsString))
-		{
-			applicationPreferences.put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, "90");
-		}
-		else
-		{
-			modelObject.setIntervalOfMouseMovementsCheckInSeconds(
-				Integer.valueOf(intervalOfMouseMovementsCheckInSecondsAsString));
-		}
-
-		String moveOnStartupAsString = applicationPreferences.get(MOVE_ON_STARTUP, NOT_SET);
-		if (NOT_SET.equals(moveOnStartupAsString))
-		{
-			applicationPreferences.put(MOVE_ON_STARTUP, "false");
-		}
-		else
-		{
-			boolean moveOnStartup = Boolean.parseBoolean(moveOnStartupAsString);
-			modelObject.setMoveOnStartup(moveOnStartup);
-		}
-		return modelObject;
 	}
 
 	public static void main(final String[] args)
@@ -154,7 +92,6 @@ public class PureSwingSystemTray
 			throw new RuntimeException("Unable to load SystemTray!");
 		}
 
-		// systemTray.installShutdownHook();
 		ImageIcon trayImageIcon = ImageIconFactory
 			.newImageIcon("io/github/astrapi69/silk/icons/anchor.png", "Keep moving");
 		Image image = trayImageIcon.getImage();

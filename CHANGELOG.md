@@ -16,6 +16,7 @@ CHANGED:
 - update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle to new version 6.20.0
 - update of dependency swing-base-components to new minor version 2.7
 - update of dependency swing-components to new minor version 8.1
+- update of dependency icon-img-extensions to new minor version 2.2
 - update of test dependency lombok to new version 1.18.28
 - update of test dependency junit-jupiter-api to new milestone version 5.10.0
 
