@@ -75,9 +75,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	@NotNull
 	private static Optional<IModel<String>> getJMTextFieldModel(ActionEvent actionEvent)
 	{
-		if (actionEvent.getSource() instanceof JMTextField)
+		if (actionEvent.getSource() instanceof JMTextField source)
 		{
-			var source = (JMTextField)actionEvent.getSource();
 			String sourceText = source.getText();
 			IModel<String> propertyModel = source.getPropertyModel();
 			propertyModel.setObject(sourceText);
