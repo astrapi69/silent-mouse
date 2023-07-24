@@ -36,10 +36,10 @@ import dorkbox.systemTray.Separator;
 import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.icon.ImageIconFactory;
 import io.github.astrapi69.model.BaseModel;
+import io.github.astrapi69.roboter.MouseExtensions;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
 import io.github.astrapi69.swing.panel.info.InfoModelBean;
-import io.github.astrapi69.swing.robot.MouseExtensions;
 
 public class PureSwingSystemTray
 {

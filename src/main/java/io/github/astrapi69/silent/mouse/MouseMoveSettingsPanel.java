@@ -37,11 +37,11 @@ import io.github.astrapi69.model.LambdaModel;
 import io.github.astrapi69.model.api.IModel;
 import io.github.astrapi69.model.check.CheckedModel;
 import io.github.astrapi69.swing.base.BasePanel;
-import io.github.astrapi69.swing.combobox.model.GenericComboBoxModel;
 import io.github.astrapi69.swing.component.JMCheckBox;
 import io.github.astrapi69.swing.component.JMComboBox;
 import io.github.astrapi69.swing.component.JMTextField;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
+import io.github.astrapi69.swing.model.combobox.GenericComboBoxModel;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -75,8 +75,9 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	@NotNull
 	private static Optional<IModel<String>> getJMTextFieldModel(ActionEvent actionEvent)
 	{
-		if (actionEvent.getSource() instanceof JMTextField source)
+		if (actionEvent.getSource() instanceof JMTextField)
 		{
+			var source = (JMTextField)actionEvent.getSource();
 			String sourceText = source.getText();
 			IModel<String> propertyModel = source.getPropertyModel();
 			propertyModel.setObject(sourceText);

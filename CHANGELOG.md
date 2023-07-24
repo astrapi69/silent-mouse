@@ -4,12 +4,21 @@
 Version 1.4-SNAPSHOT
 -------------
 
+ADDED:
+
+- new dependency 'io.github.astrapi69:roboter' in major version 1
+
 CHANGED:
 
-- update gradle to new version 8.2-rc-2
-- update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin in version 0.47.0
-- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle in version 6.19.0
+- update gradle to new version 8.3-rc-1
+- update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.1.0
+- update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin to new version 0.47.0
+- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle to new version 6.20.0
+- update of dependency swing-base-components to new minor version 2.7
+- update of dependency swing-components to new minor version 8.1
 - update of test dependency lombok to new version 1.18.28
+- update of test dependency junit-jupiter-api to new milestone version 5.10.0
+
 
 Version 1.3
 -------------
