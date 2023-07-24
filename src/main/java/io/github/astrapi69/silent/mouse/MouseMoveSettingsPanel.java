@@ -49,11 +49,6 @@ import net.miginfocom.swing.MigLayout;
 public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 {
 	public static final String NOT_SET = "not set";
-	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
-	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
-	public static final String X_AXIS = "xAxis";
-	public static final String Y_AXIS = "yAxis";
-	public static final String MOVE_ON_STARTUP = "moveOnStartup";
 	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableX;
@@ -82,7 +77,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	{
 		if (actionEvent.getSource() instanceof JMTextField)
 		{
-			JMTextField source = (JMTextField)actionEvent.getSource();
+			var source = (JMTextField)actionEvent.getSource();
 			String sourceText = source.getText();
 			IModel<String> propertyModel = source.getPropertyModel();
 			propertyModel.setObject(sourceText);
@@ -93,30 +88,31 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 
 	private static void setModelFromPreferences(SettingsModelBean modelObject)
 	{
-		String xAxisAsString = applicationPreferences.get(X_AXIS, NOT_SET);
+		String xAxisAsString = applicationPreferences.get(SettingsModelBean.X_AXIS, NOT_SET);
 		if (NOT_SET.equals(xAxisAsString))
 		{
-			applicationPreferences.put(X_AXIS, "1");
+			applicationPreferences.put(SettingsModelBean.X_AXIS, "1");
 		}
 		else
 		{
 			modelObject.setXAxis(Integer.valueOf(xAxisAsString));
 		}
 
-		String yAxisAsString = applicationPreferences.get(Y_AXIS, NOT_SET);
+		String yAxisAsString = applicationPreferences.get(SettingsModelBean.Y_AXIS, NOT_SET);
 		if (NOT_SET.equals(yAxisAsString))
 		{
-			applicationPreferences.put(Y_AXIS, "1");
+			applicationPreferences.put(SettingsModelBean.Y_AXIS, "1");
 		}
 		else
 		{
 			modelObject.setYAxis(Integer.valueOf(yAxisAsString));
 		}
 
-		String intervalOfSecondsAsString = applicationPreferences.get(INTERVAL_OF_SECONDS, NOT_SET);
+		String intervalOfSecondsAsString = applicationPreferences
+			.get(SettingsModelBean.INTERVAL_OF_SECONDS, NOT_SET);
 		if (NOT_SET.equals(intervalOfSecondsAsString))
 		{
-			applicationPreferences.put(INTERVAL_OF_SECONDS, "180");
+			applicationPreferences.put(SettingsModelBean.INTERVAL_OF_SECONDS, "180");
 		}
 		else
 		{
@@ -124,10 +120,11 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		}
 
 		String intervalOfMouseMovementsCheckInSecondsAsString = applicationPreferences
-			.get(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, NOT_SET);
+			.get(SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, NOT_SET);
 		if (NOT_SET.equals(intervalOfMouseMovementsCheckInSecondsAsString))
 		{
-			applicationPreferences.put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, "90");
+			applicationPreferences
+				.put(SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS, "90");
 		}
 		else
 		{
@@ -135,15 +132,15 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				Integer.valueOf(intervalOfMouseMovementsCheckInSecondsAsString));
 		}
 
-		String moveOnStartupAsString = applicationPreferences.get(MOVE_ON_STARTUP, NOT_SET);
+		String moveOnStartupAsString = applicationPreferences.get(SettingsModelBean.MOVE_ON_STARTUP,
+			NOT_SET);
 		if (NOT_SET.equals(moveOnStartupAsString))
 		{
-			applicationPreferences.put(MOVE_ON_STARTUP, "false");
+			applicationPreferences.put(SettingsModelBean.MOVE_ON_STARTUP, "false");
 		}
 		else
 		{
-			Boolean moveOnStartup = Boolean.valueOf(moveOnStartupAsString);
-			modelObject.setMoveOnStartup(moveOnStartup);
+			modelObject.setMoveOnStartup(Boolean.parseBoolean(moveOnStartupAsString));
 		}
 	}
 
@@ -224,7 +221,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				final String text = source.getText();
 				getModelObject().setIntervalOfSeconds(Integer.valueOf(text));
 
-				getApplicationPreferences().put(INTERVAL_OF_SECONDS,
+				getApplicationPreferences().put(SettingsModelBean.INTERVAL_OF_SECONDS,
 					getModelObject().getIntervalOfSeconds().toString());
 			}
 		});
@@ -246,7 +243,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfMouseMovementsCheckInSeconds(Integer.valueOf(text));
-				getApplicationPreferences().put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
+				getApplicationPreferences().put(
+					SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
 					getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString());
 			}
 		});
@@ -258,34 +256,38 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		Boolean moveOnStartup = source.getPropertyModel().getObject();
 		getModelObject().setMoveOnStartup(moveOnStartup);
 		String moveOnStartupAsString = Boolean.toString(getModelObject().isMoveOnStartup());
-		getApplicationPreferences().put(MOVE_ON_STARTUP, moveOnStartupAsString);
-		String foo = getApplicationPreferences().get(MOVE_ON_STARTUP, "foo");
+		getApplicationPreferences().put(SettingsModelBean.MOVE_ON_STARTUP, moveOnStartupAsString);
+		String foo = getApplicationPreferences().get(SettingsModelBean.MOVE_ON_STARTUP, "foo");
 		System.out.println(foo);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void onChangeCmbVariableY(final ActionEvent actionEvent)
 	{
 		JMComboBox<Integer, GenericComboBoxModel<Integer>> source = (JMComboBox<Integer, GenericComboBoxModel<Integer>>)actionEvent
 			.getSource();
 		final Object selectedItem = source.getModel().getSelectedItem();
 		getModelObject().setYAxis(Integer.valueOf(selectedItem.toString()));
-		getApplicationPreferences().put(Y_AXIS, getModelObject().getYAxis().toString());
+		getApplicationPreferences().put(SettingsModelBean.Y_AXIS,
+			getModelObject().getYAxis().toString());
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void onChangeCmbVariableX(final ActionEvent actionEvent)
 	{
 		JMComboBox<Integer, GenericComboBoxModel<Integer>> source = (JMComboBox<Integer, GenericComboBoxModel<Integer>>)actionEvent
 			.getSource();
 		final Object selectedItem = source.getModel().getSelectedItem();
 		getModelObject().setXAxis(Integer.valueOf(selectedItem.toString()));
-		getApplicationPreferences().put(X_AXIS, getModelObject().getXAxis().toString());
+		getApplicationPreferences().put(SettingsModelBean.X_AXIS,
+			getModelObject().getXAxis().toString());
 	}
 
 	protected void onChangeTxtIntervalOfSeconds(final ActionEvent actionEvent)
 	{
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
 			getModelObject().setIntervalOfSeconds(Integer.valueOf(propertyModel.getObject()));
-			getApplicationPreferences().put(INTERVAL_OF_SECONDS,
+			getApplicationPreferences().put(SettingsModelBean.INTERVAL_OF_SECONDS,
 				getModelObject().getIntervalOfSeconds().toString());
 		});
 	}
@@ -295,7 +297,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
 			getModelObject().setIntervalOfMouseMovementsCheckInSeconds(
 				Integer.valueOf(propertyModel.getObject()));
-			getApplicationPreferences().put(INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
+			getApplicationPreferences().put(
+				SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
 				getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString());
 		});
 	}

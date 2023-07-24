@@ -22,6 +22,11 @@ package io.github.astrapi69.silent.mouse;
 
 public class SettingsModelBean
 {
+	public static final String X_AXIS = "xAxis";
+	public static final String Y_AXIS = "yAxis";
+	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
+	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
+	public static final String MOVE_ON_STARTUP = "moveOnStartup";
 	private Integer xAxis = 1;
 	private Integer yAxis = 1;
 	private Integer intervalOfSeconds = 10;
