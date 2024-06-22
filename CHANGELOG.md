@@ -11,6 +11,7 @@ ADDED:
 
 CHANGED:
 
+- update to jdk version 17
 - update gradle to new version 8.8
 - update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.6
 - update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin to new version 0.51.0
