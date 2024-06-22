@@ -39,14 +39,16 @@ tasks.register("signJar", Jar) {
     def createIzPackInstallerStringProperty = project.property('createIzPackInstaller')
     def createIzPackInstaller = createIzPackInstallerStringProperty.toBoolean()
     if (createIzPackInstaller) {
+        DirectoryProperty buildDirectoryProperty = layout.buildDirectory
+        String buildDirectory = buildDirectoryProperty.get()
         def pkAlias = project.property("$silentMouseKeyAlias")
         def keystoreFileName = project.property("$silentMouseStoreFile")
         def storePassword = project.property("$silentMouseStorePassword")
         def keyPassword = project.property("$silentMouseKeyPassword")
         def keystoreType = project.property("$silentMouseStoreType")
-        def libsFilePath = "$buildDir/libs"
+        def libsFilePath = "$buildDirectory/libs"
         def libFiles = files { file(libsFilePath).listFiles() }
-        def destDir = "$buildDir/signed"
+        def destDir = "$buildDirectory/signed"
         def signedDir = new File(destDir)
         signedDir.mkdirs()
         libFiles.each {
@@ -58,6 +60,7 @@ tasks.register("signJar", Jar) {
                     keystore: "$keystoreFileName",
                     storepass: "$storePassword",
                     keypass: "$keyPassword",
+                    verbose: true,
                     preservelastmodified: "true"
             )
         }

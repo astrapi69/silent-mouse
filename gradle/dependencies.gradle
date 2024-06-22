@@ -1,27 +1,31 @@
 dependencies {
-    izpack("org.codehaus.izpack:izpack-ant:$izpackVersion")
 
-    implementation("com.miglayout:miglayout-swing:$miglayoutSwingVersion")
-    implementation("com.dorkbox:SystemTray:$systemTrayVersion")
-    implementation("io.github.astrapi69:model-data:$modelDataVersion")
-    implementation("io.github.astrapi69:component-model:$componentModelVersion")
-    implementation("io.github.astrapi69:icon-img-extensions:$iconImgExtensionsVersion")
-    implementation("io.github.astrapi69:silk-icon-theme:$silkIconThemeVersion")
-    implementation("io.github.astrapi69:swing-base-components:$swingBaseComponentsVersion")
-    implementation("io.github.astrapi69:swing-components:$swingComponentsVersion")
-    implementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
-    implementation("io.github.astrapi69:silly-bean:$sillyBeanVersion")
-    implementation("org.swinglabs.swingx:swingx-all:$swingxAllVersion")
-    implementation("io.github.astrapi69:roboter:$roboterVersion")
+    izpack libs.izpack.ant
 
-    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
-    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    testImplementation("io.github.astrapi69:silly-io:$sillyIoVersion")
-    testImplementation("io.github.astrapi69:file-worker:$fileWorkerVersion")
-    testImplementation("io.github.astrapi69:throwable:$throwableVersion")
-    testImplementation("io.github.astrapi69:gradle-migration-data:$gradleMigrationDataVersion")
-    testImplementation("org.apache.commons:commons-text:$commonsTextVersion")
-    testImplementation("com.github.meanbeanlib:meanbean:$meanbeanVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    implementation libs.miglayout.swing
+    implementation libs.system.tray
+    implementation libs.model.data
+    implementation libs.component.model
+    implementation libs.icon.img.extensions
+    implementation libs.silk.icon.theme
+    implementation libs.swing.base.components
+    implementation libs.swing.components
+    implementation libs.silly.collection
+    implementation libs.silly.bean
+    implementation libs.swingx.all
+    implementation libs.roboter
+
+    testImplementation libs.silly.io
+    testImplementation libs.file.worker
+    testImplementation libs.throwable
+    testImplementation libs.gradle.migration.data
+    testImplementation libs.commons.text
+    // Note: use of bundles...
+    testImplementation libs.bundles.unit.testing
+    testRuntimeOnly libs.junit.platform.launcher
 }

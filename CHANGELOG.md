@@ -1,19 +1,20 @@
 ## Change log
 ----------------------
 
-Version 1.4-SNAPSHOT
+Version 2-SNAPSHOT
 -------------
 
 ADDED:
 
+- new libs.versions.toml file for new automatic catalog versions update
 - new dependency 'io.github.astrapi69:roboter' in major version 1
 
 CHANGED:
 
-- update gradle to new version 8.3-rc-1
-- update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.1.0
-- update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin to new version 0.47.0
-- update of gradle-plugin dependency of com.diffplug.spotless:spotless-plugin-gradle to the new version 6.20.0
+- update gradle to new version 8.8
+- update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.6
+- update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin to new version 0.51.0
+- update of gradle-plugin dependency 'com.diffplug.spotless:spotless-plugin-gradle' to new minor version 7.0.0.BETA1
 - update of dependency swing-base-components to new minor version 2.7
 - update of dependency swing-components to new minor version 8.1
 - update of dependency icon-img-extensions to new minor version 2.2
