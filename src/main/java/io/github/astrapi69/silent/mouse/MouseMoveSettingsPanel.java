@@ -32,16 +32,16 @@ import org.jetbrains.annotations.NotNull;
 
 import io.github.astrapi69.collection.array.ArrayFactory;
 import io.github.astrapi69.collection.pair.ValueBox;
+import io.github.astrapi69.component.model.check.CheckedModel;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.model.LambdaModel;
 import io.github.astrapi69.model.api.IModel;
-import io.github.astrapi69.model.check.CheckedModel;
 import io.github.astrapi69.swing.base.BasePanel;
-import io.github.astrapi69.swing.component.JMCheckBox;
-import io.github.astrapi69.swing.component.JMComboBox;
-import io.github.astrapi69.swing.component.JMTextField;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
 import io.github.astrapi69.swing.model.combobox.GenericComboBoxModel;
+import io.github.astrapi69.swing.model.component.JMCheckBox;
+import io.github.astrapi69.swing.model.component.JMComboBox;
+import io.github.astrapi69.swing.model.component.JMTextField;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 

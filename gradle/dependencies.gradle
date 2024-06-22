@@ -15,6 +15,7 @@ dependencies {
     implementation libs.silk.icon.theme
     implementation libs.swing.base.components
     implementation libs.swing.components
+    implementation libs.swing.model.components
     implementation libs.silly.collection
     implementation libs.silly.bean
     implementation libs.swingx.all
