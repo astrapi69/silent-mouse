@@ -12,15 +12,19 @@ ADDED:
 CHANGED:
 
 - update to jdk version 17
-- update gradle to new version 8.8
-- update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.6
+- update gradle to new version 8.10.2
+- update of dependency lombok to new version 1.18.34
+- update of gradle-plugin dependency of io.freefair.gradle:lombok-plugin to new version 8.10.2
 - update of gradle-plugin dependency of com.github.ben-manes:gradle-versions-plugin to new version 0.51.0
-- update of gradle-plugin dependency 'com.diffplug.spotless:spotless-plugin-gradle' to new minor version 7.0.0.BETA1
-- update of dependency swing-base-components to new minor version 2.7
-- update of dependency swing-components to new minor version 8.1
+- update of gradle-plugin dependency of org.ajoberstar.grgit:grgit-gradle to new version 5.3.0
+- update of gradle-plugin dependency 'com.diffplug.spotless:spotless-plugin-gradle' to new minor version 7.0.0.BETA2
+- update of dependency izpack-ant to new minor version 5.2.3
 - update of dependency icon-img-extensions to new minor version 2.2
+- update of dependency swing-base-components to new minor version 4.2
+- update of dependency swing-components to new minor version 9
+- update of test dependency file-worker to new version 18.0
 - update of test dependency lombok to new version 1.18.28
-- update of test dependency junit-jupiter-api to new milestone version 5.10.0
+- update of test dependency junit-jupiter-api to new milestone version 5.11.2
 
 
 Version 1.3

@@ -1,46 +1,43 @@
 [versions]
 commons-text-version = "1.12.0"
 component-model-version = "2"
-file-worker-version = "17.2"
+file-worker-version = "18.0"
 gradle-izpack-plugin-version = "3.2"
-gradle-migration-data-version = "2.2"
-gradle-plugin-grgit-version = "5.2.2"
+gradle-plugin-grgit-version = "5.3.0"
 gradle-plugin-license-version = "0.16.1"
-gradle-plugin-lombok-version = "8.6"
-gradle-plugin-spotless-version = "7.0.0.BETA1"
+gradle-plugin-lombok-version = "8.10.2"
+gradle-plugin-spotless-version = "7.0.0.BETA2"
 gradle-plugin-version-catalog-update-version = "0.8.4"
 gradle-plugin-versions-version = "0.51.0"
-icon-img-extensions-version = "3"
-izpack-ant-version = "5.2.1"
+icon-img-extensions-version = "4"
+izpack-ant-version = "5.2.3"
 junit-jupiter-extensions-version = "2"
-junit-jupiter-version = "5.11.0-M2"
-junit-platform-launcher-version = "1.11.0-M2"
-lombok-version = "1.18.32"
+junit-jupiter-version = "5.11.2"
+lombok-version = "1.18.34"
 meanbean-version = "3.0.0-M9"
-miglayout-swing-version = "11.3"
+miglayout-swing-version = "11.4.2"
 model-data-version = "3.1"
 roboter-version = "2"
 silk-icon-theme-version = "1"
-silly-bean-version = "2"
-silly-collection-version = "27.1"
-silly-io-version = "3"
-swing-base-components-version = "4.2"
+silly-bean-version = "3.0"
+silly-collection-version = "28.1"
+silly-io-version = "3.2"
+swing-base-components-version = "5.0"
 swing-components-version = "9"
-swing-model-components-version = "1"
+swing-model-components-version = "1.1"
 swingx-all-version = "1.6.5-1"
 system-tray-version = "4.4"
-throwable-version = "2.3"
+throwable-version = "3"
 
 [libraries]
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text-version" }
 component-model = { module = "io.github.astrapi69:component-model", version.ref = "component-model-version" }
 file-worker = { module = "io.github.astrapi69:file-worker", version.ref = "file-worker-version" }
-gradle-migration-data = { module = "io.github.astrapi69:gradle-migration-data", version.ref = "gradle-migration-data-version" }
 icon-img-extensions = { module = "io.github.astrapi69:icon-img-extensions", version.ref = "icon-img-extensions-version" }
 izpack-ant = { module = "org.codehaus.izpack:izpack-ant", version.ref = "izpack-ant-version" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter-version" }
 junit-jupiter-extensions = { module = "io.github.astrapi69:junit-jupiter-extensions", version.ref = "junit-jupiter-extensions-version" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform-launcher-version" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok-version" }
 meanbean = { module = "com.github.meanbeanlib:meanbean", version.ref = "meanbean-version" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout-swing-version" }
@@ -58,7 +55,52 @@ system-tray = { module = "com.dorkbox:SystemTray", version.ref = "system-tray-ve
 throwable = { module = "io.github.astrapi69:throwable", version.ref = "throwable-version" }
 
 [bundles]
+# Dependencies for the annotation processor used during the compilation process
+annotation-processor = [
+    "lombok",
+]
+# Dependencies required only at compile-time and not included in the final artifact
+compile-only = [
+    "lombok",
+]
+# Bundle of the core dependencies
+core-dependencies = [
+    "miglayout-swing",
+    "system-tray",
+    "model-data",
+    "component-model",
+    "icon-img-extensions",
+    "silk-icon-theme",
+    "swing-base-components",
+    "swing-model-components",
+    "swing-components",
+    "silly-collection",
+    "silly-bean",
+    "swingx-all",
+    "roboter",
+]
+# Bundle of the izpack dependencies
+izpack = [
+    "izpack-ant",
+]
+# Annotation processor dependencies used specifically for test classes
+test-annotation-processor = [
+    "lombok",
+]
+# Dependencies required only at test compile-time and not included in test runtime
+test-compile-only = [
+    "lombok",
+]
+# Dependencies required only at test runtime, such as test execution platforms
+test-runtime-only = [
+    "junit-platform-launcher",
+]
+# Dependencies required for unit testing, including assertions, mocking, and parameterized tests
 unit-testing = [
+    "commons-text",
+    "file-worker",
+    "throwable",
+    "silly-io",
     "junit-jupiter",
     "junit-jupiter-extensions",
     "meanbean",

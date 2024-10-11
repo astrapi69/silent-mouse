@@ -1,32 +1,15 @@
 dependencies {
-
-    izpack libs.izpack.ant
-
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-    testCompileOnly libs.lombok
-    testAnnotationProcessor libs.lombok
-
-    implementation libs.miglayout.swing
-    implementation libs.system.tray
-    implementation libs.model.data
-    implementation libs.component.model
-    implementation libs.icon.img.extensions
-    implementation libs.silk.icon.theme
-    implementation libs.swing.base.components
-    implementation libs.swing.components
-    implementation libs.swing.model.components
-    implementation libs.silly.collection
-    implementation libs.silly.bean
-    implementation libs.swingx.all
-    implementation libs.roboter
-
-    testImplementation libs.silly.io
-    testImplementation libs.file.worker
-    testImplementation libs.throwable
-    testImplementation libs.gradle.migration.data
-    testImplementation libs.commons.text
     // Note: use of bundles...
+    izpack libs.bundles.izpack
+
+    compileOnly libs.bundles.compile.only
+    annotationProcessor libs.bundles.annotation.processor
+
+    testCompileOnly libs.bundles.test.compile.only
+    testAnnotationProcessor libs.bundles.test.annotation.processor
+
+    implementation libs.bundles.core.dependencies
+
     testImplementation libs.bundles.unit.testing
     testRuntimeOnly libs.junit.platform.launcher
 }
