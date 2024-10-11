@@ -177,7 +177,15 @@ public class PureSwingSystemTray
 		aboutItem.setCallback(e -> {
 			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
 				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis").labelVersion("Version:").version("1.4") // !!!
+				.copyright("Asterios Raptis") // !!!
+				// IMPORTANT
+				// Change
+				// version
+				// on
+				// deployment
+				// IMPORTANT
+				// !!!
+				.labelVersion("Version:").version("2.0.1") // !!!
 				// IMPORTANT
 				// Change
 				// version

@@ -14,10 +14,10 @@
     </variables>
 
     <info>
-        <javaversion>11</javaversion>
+        <javaversion>17</javaversion>
         <appname>silent-mouse</appname>
         <appsubpath>app/silent-mouse</appsubpath>
-        <appversion>1.4</appversion>
+        <appversion>2.0.1</appversion>
         <authors>
             <author name="Asterios Raptis" email="asterios.raptis@gmx.net"/>
         </authors>
