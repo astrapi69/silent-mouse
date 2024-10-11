@@ -26,20 +26,71 @@ package io.github.astrapi69.silent.mouse;
 
 import java.util.prefs.Preferences;
 
+/**
+ * The {@link SettingsModelBean} class represents the configuration settings for mouse movements,
+ * including axis movements, interval settings, and whether the mouse movement starts on startup
+ */
 public class SettingsModelBean
 {
+	/**
+	 * Constant for the "not set" option
+	 */
 	public static final String NOT_SET = "not set";
+
+	/**
+	 * Key for the X-axis setting in preferences
+	 */
 	public static final String X_AXIS = "xAxis";
+
+	/**
+	 * Key for the Y-axis setting in preferences
+	 */
 	public static final String Y_AXIS = "yAxis";
+
+	/**
+	 * Key for the interval of seconds setting in preferences
+	 */
 	public static final String INTERVAL_OF_SECONDS = "intervalOfSeconds";
+
+	/**
+	 * Key for the interval of mouse movements check in preferences
+	 */
 	public static final String INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS = "intervalOfMouseMovementsCheckInSeconds";
+
+	/**
+	 * Key for the move on startup setting in preferences
+	 */
 	public static final String MOVE_ON_STARTUP = "moveOnStartup";
+
+	/** X-axis movement value */
 	private Integer xAxis = 1;
+
+	/** Y-axis movement value */
 	private Integer yAxis = 1;
+
+	/** Interval in seconds for mouse movement */
 	private Integer intervalOfSeconds = 10;
+
+	/** Interval in seconds for checking mouse movements */
 	private Integer intervalOfMouseMovementsCheckInSeconds = 5;
+
+	/** Flag for enabling mouse movement on startup */
 	private boolean moveOnStartup = true;
 
+	/**
+	 * Constructor for creating a {@link SettingsModelBean} with specific settings
+	 *
+	 * @param xAxis
+	 *            the X-axis movement value
+	 * @param yAxis
+	 *            the Y-axis movement value
+	 * @param intervalOfSeconds
+	 *            the interval in seconds for mouse movement
+	 * @param intervalOfMouseMovementsCheckInSeconds
+	 *            the interval for checking mouse movements
+	 * @param moveOnStartup
+	 *            whether to move the mouse on startup
+	 */
 	public SettingsModelBean(Integer xAxis, Integer yAxis, Integer intervalOfSeconds,
 		Integer intervalOfMouseMovementsCheckInSeconds, boolean moveOnStartup)
 	{
@@ -50,10 +101,19 @@ public class SettingsModelBean
 		this.moveOnStartup = moveOnStartup;
 	}
 
+	/**
+	 * Default constructor for creating an empty {@link SettingsModelBean}
+	 */
 	public SettingsModelBean()
 	{
 	}
 
+	/**
+	 * Builder-based constructor for {@link SettingsModelBean}
+	 *
+	 * @param b
+	 *            the builder to create the {@link SettingsModelBean}
+	 */
 	protected SettingsModelBean(SettingsModelBeanBuilder<?, ?> b)
 	{
 		this.xAxis = b.xAxis$value;
@@ -63,87 +123,167 @@ public class SettingsModelBean
 		this.moveOnStartup = b.moveOnStartup$value;
 	}
 
+	/**
+	 * Default X-axis value @return the integer
+	 */
 	static Integer $default$xAxis()
 	{
 		return 1;
 	}
 
+	/**
+	 * Default Y-axis value @return the integer
+	 */
 	static Integer $default$yAxis()
 	{
 		return 1;
 	}
 
+	/**
+	 * Default interval in seconds @return the integer
+	 */
 	static Integer $default$intervalOfSeconds()
 	{
 		return 10;
 	}
 
+	/**
+	 * Default interval for checking mouse movements @return the integer
+	 */
 	static Integer $default$intervalOfMouseMovementsCheckInSeconds()
 	{
 		return 5;
 	}
 
+	/**
+	 * Default move on startup boolean.
+	 *
+	 * @return the boolean
+	 */
 	static boolean $default$moveOnStartup()
 	{
 		return true;
 	}
 
+	/**
+	 * Builder settings model bean builder.
+	 *
+	 * @return the settings model bean builder
+	 */
 	public static SettingsModelBeanBuilder<?, ?> builder()
 	{
 		return new SettingsModelBeanBuilderImpl();
 	}
 
+	/**
+	 * Gets x axis.
+	 *
+	 * @return the x axis
+	 */
 	public Integer getXAxis()
 	{
 		return this.xAxis;
 	}
 
+	/**
+	 * Sets x axis.
+	 *
+	 * @param xAxis
+	 *            the x axis
+	 */
 	public void setXAxis(Integer xAxis)
 	{
 		this.xAxis = xAxis;
 	}
 
+	/**
+	 * Gets y axis.
+	 *
+	 * @return the y axis
+	 */
 	public Integer getYAxis()
 	{
 		return this.yAxis;
 	}
 
+	/**
+	 * Sets y axis.
+	 *
+	 * @param yAxis
+	 *            the y axis
+	 */
 	public void setYAxis(Integer yAxis)
 	{
 		this.yAxis = yAxis;
 	}
 
+	/**
+	 * Gets interval of seconds.
+	 *
+	 * @return the interval of seconds
+	 */
 	public Integer getIntervalOfSeconds()
 	{
 		return this.intervalOfSeconds;
 	}
 
+	/**
+	 * Sets interval of seconds.
+	 *
+	 * @param intervalOfSeconds
+	 *            the interval of seconds
+	 */
 	public void setIntervalOfSeconds(Integer intervalOfSeconds)
 	{
 		this.intervalOfSeconds = intervalOfSeconds;
 	}
 
+	/**
+	 * Gets interval of mouse movements check in seconds.
+	 *
+	 * @return the interval of mouse movements check in seconds
+	 */
 	public Integer getIntervalOfMouseMovementsCheckInSeconds()
 	{
 		return this.intervalOfMouseMovementsCheckInSeconds;
 	}
 
+	/**
+	 * Sets interval of mouse movements check in seconds.
+	 *
+	 * @param intervalOfMouseMovementsCheckInSeconds
+	 *            the interval of mouse movements check in seconds
+	 */
 	public void setIntervalOfMouseMovementsCheckInSeconds(
 		Integer intervalOfMouseMovementsCheckInSeconds)
 	{
 		this.intervalOfMouseMovementsCheckInSeconds = intervalOfMouseMovementsCheckInSeconds;
 	}
 
+	/**
+	 * Is move on startup boolean.
+	 *
+	 * @return the boolean
+	 */
 	public boolean isMoveOnStartup()
 	{
 		return this.moveOnStartup;
 	}
 
+	/**
+	 * Sets move on startup.
+	 *
+	 * @param moveOnStartup
+	 *            the move on startup
+	 */
 	public void setMoveOnStartup(boolean moveOnStartup)
 	{
 		this.moveOnStartup = moveOnStartup;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean equals(final Object o)
 	{
 		if (o == this)
@@ -181,11 +321,21 @@ public class SettingsModelBean
 		return true;
 	}
 
+	/**
+	 * Can equal boolean.
+	 *
+	 * @param other
+	 *            the other
+	 * @return the boolean
+	 */
 	protected boolean canEqual(final Object other)
 	{
 		return other instanceof SettingsModelBean;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int hashCode()
 	{
 		final int PRIME = 59;
@@ -205,6 +355,9 @@ public class SettingsModelBean
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString()
 	{
 		return "SettingsModelBean(xAxis=" + this.getXAxis() + ", yAxis=" + this.getYAxis()
@@ -214,22 +367,65 @@ public class SettingsModelBean
 			+ this.isMoveOnStartup() + ")";
 	}
 
+	/**
+	 * To builder settings model bean builder.
+	 *
+	 * @return the settings model bean builder
+	 */
 	public SettingsModelBeanBuilder<?, ?> toBuilder()
 	{
 		return new SettingsModelBeanBuilderImpl().$fillValuesFrom(this);
 	}
 
+	/**
+	 * The type Settings model bean builder.
+	 *
+	 * @param <C>
+	 *            the type parameter
+	 * @param <B>
+	 *            the type parameter
+	 */
 	public static abstract class SettingsModelBeanBuilder<C extends SettingsModelBean, B extends SettingsModelBeanBuilder<C, B>>
 	{
+		/**
+		 * The X axis value.
+		 */
 		Integer xAxis$value;
+		/**
+		 * The X axis set.
+		 */
 		boolean xAxis$set;
+		/**
+		 * The Y axis value.
+		 */
 		Integer yAxis$value;
+		/**
+		 * The Y axis set.
+		 */
 		boolean yAxis$set;
+		/**
+		 * The Interval of seconds value.
+		 */
 		Integer intervalOfSeconds$value;
+		/**
+		 * The Interval of seconds set.
+		 */
 		boolean intervalOfSeconds$set;
+		/**
+		 * The Interval of mouse movements check in seconds value.
+		 */
 		Integer intervalOfMouseMovementsCheckInSeconds$value;
+		/**
+		 * The Interval of mouse movements check in seconds set.
+		 */
 		boolean intervalOfMouseMovementsCheckInSeconds$set;
+		/**
+		 * The Move on startup value.
+		 */
 		boolean moveOnStartup$value;
+		/**
+		 * The Move on startup set.
+		 */
 		boolean moveOnStartup$set;
 
 		private static void $fillValuesFromInstanceIntoBuilder(SettingsModelBean instance,
@@ -243,6 +439,13 @@ public class SettingsModelBean
 			b.moveOnStartup(instance.moveOnStartup);
 		}
 
+		/**
+		 * X axis b.
+		 *
+		 * @param xAxis
+		 *            the x axis
+		 * @return the b
+		 */
 		public B xAxis(Integer xAxis)
 		{
 			this.xAxis$value = xAxis;
@@ -250,6 +453,13 @@ public class SettingsModelBean
 			return self();
 		}
 
+		/**
+		 * Y axis b.
+		 *
+		 * @param yAxis
+		 *            the y axis
+		 * @return the b
+		 */
 		public B yAxis(Integer yAxis)
 		{
 			this.yAxis$value = yAxis;
@@ -257,6 +467,13 @@ public class SettingsModelBean
 			return self();
 		}
 
+		/**
+		 * Interval of seconds b.
+		 *
+		 * @param intervalOfSeconds
+		 *            the interval of seconds
+		 * @return the b
+		 */
 		public B intervalOfSeconds(Integer intervalOfSeconds)
 		{
 			this.intervalOfSeconds$value = intervalOfSeconds;
@@ -264,6 +481,13 @@ public class SettingsModelBean
 			return self();
 		}
 
+		/**
+		 * Interval of mouse movements check in seconds b.
+		 *
+		 * @param intervalOfMouseMovementsCheckInSeconds
+		 *            the interval of mouse movements check in seconds
+		 * @return the b
+		 */
 		public B intervalOfMouseMovementsCheckInSeconds(
 			Integer intervalOfMouseMovementsCheckInSeconds)
 		{
@@ -272,6 +496,13 @@ public class SettingsModelBean
 			return self();
 		}
 
+		/**
+		 * Move on startup b.
+		 *
+		 * @param moveOnStartup
+		 *            the move on startup
+		 * @return the b
+		 */
 		public B moveOnStartup(boolean moveOnStartup)
 		{
 			this.moveOnStartup$value = moveOnStartup;
@@ -279,14 +510,31 @@ public class SettingsModelBean
 			return self();
 		}
 
+		/**
+		 * Fill values from b.
+		 *
+		 * @param instance
+		 *            the instance
+		 * @return the b
+		 */
 		protected B $fillValuesFrom(C instance)
 		{
 			SettingsModelBeanBuilder.$fillValuesFromInstanceIntoBuilder(instance, this);
 			return self();
 		}
 
+		/**
+		 * Self b.
+		 *
+		 * @return the b
+		 */
 		protected abstract B self();
 
+		/**
+		 * Build c.
+		 *
+		 * @return the c
+		 */
 		public abstract C build();
 
 		public String toString()
@@ -341,6 +589,15 @@ public class SettingsModelBean
 	}
 
 
+	/**
+	 * Sets model from preferences.
+	 *
+	 * @param modelObject
+	 *            the model object
+	 * @param applicationPreferences
+	 *            the application preferences
+	 * @return the model from preferences
+	 */
 	public static SettingsModelBean setModelFromPreferences(final SettingsModelBean modelObject,
 		final Preferences applicationPreferences)
 	{

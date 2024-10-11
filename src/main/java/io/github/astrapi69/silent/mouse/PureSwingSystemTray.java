@@ -45,22 +45,49 @@ import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
 import io.github.astrapi69.swing.panel.info.InfoModelBean;
 
+/**
+ * The {@link PureSwingSystemTray} class handles system tray interactions and automates mouse
+ * movements for the application. It provides features like starting, stopping, and configuring
+ * mouse movement through a system tray menu
+ */
 public class PureSwingSystemTray
 {
+	/** Logger for this class */
 	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
+
+	/** Thread for executing mouse movements */
 	static InterruptableThread currentExecutionThread;
+
+	/** Thread for tracking mouse movements */
 	static InterruptableThread mouseTrackThread;
+
+	/** Map to track the mouse's positions over time */
 	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
+
+	/** Robot for automating mouse movements */
 	static Robot robot;
+
+	/** Preferences object to store and retrieve user settings */
 	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
+
+	/** Model bean containing the settings for mouse movements */
 	static SettingsModelBean settingsModelBean = SettingsModelBean
 		.setModelFromPreferences(SettingsModelBean.builder().intervalOfSeconds(180)
 			.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
 			.build(), applicationPreferences);
+
+	/** Panel for configuring the mouse movement settings */
 	static MouseMoveSettingsPanel mouseMoveSettingsPanel = new MouseMoveSettingsPanel(
 		BaseModel.of(settingsModelBean));
 
+	/**
+	 * Gets the {@link Robot} used for automating mouse movements
+	 *
+	 * @return the robot instance
+	 * @throws RuntimeException
+	 *             if unable to create a robot instance
+	 */
 	static Robot getRobot()
 	{
 		if (robot == null)
@@ -77,6 +104,12 @@ public class PureSwingSystemTray
 		return robot;
 	}
 
+	/**
+	 * The main entry point of the application
+	 *
+	 * @param args
+	 *            the arguments passed to the application
+	 */
 	public static void main(final String[] args)
 	{
 		logger.setLevel(Level.FINE);
@@ -87,7 +120,9 @@ public class PureSwingSystemTray
 		frame.setVisible(false);
 	}
 
-
+	/**
+	 * Initializes the system tray components and sets up menu items
+	 */
 	private static void initializeComponents()
 	{
 		SystemTray systemTray = SystemTray.get();
@@ -120,7 +155,6 @@ public class PureSwingSystemTray
 			systemTray.setStatus("Moving around");
 		}
 
-
 		settingsItem.setCallback(e -> {
 			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(
 				mouseMoveSettingsPanel, "Settings", mouseMoveSettingsPanel.getCmbVariableX());
@@ -141,17 +175,16 @@ public class PureSwingSystemTray
 		});
 
 		aboutItem.setCallback(e -> {
-
 			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
 				.labelApplicationName("Application name:").labelCopyright("Copyright:")
 				.copyright("Asterios Raptis").labelVersion("Version:").version("1.4") // !!!
-																						// IMPORTANT
-																						// Change
-																						// version
-																						// on
-																						// deployment
-																						// IMPORTANT
-																						// !!!
+				// IMPORTANT
+				// Change
+				// version
+				// on
+				// deployment
+				// IMPORTANT
+				// !!!
 				.licence("This Software is licensed under the MIT Licence").build();
 			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
 			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
@@ -168,6 +201,7 @@ public class PureSwingSystemTray
 			startMoving(stopItem, startItem);
 			systemTray.setStatus("Moving around");
 		});
+
 		// Add components to pop-up menu
 		systemTray.getMenu().add(aboutItem).setShortcut('b');
 		systemTray.getMenu().add(settingsItem).setShortcut('t');
@@ -176,9 +210,16 @@ public class PureSwingSystemTray
 		systemTray.getMenu().add(stopItem).setShortcut('s');
 		systemTray.getMenu().add(new Separator());
 		systemTray.getMenu().add(exitItem).setShortcut('e');
-		;
 	}
 
+	/**
+	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
+	 *
+	 * @param stopItem
+	 *            the stop menu item
+	 * @param startItem
+	 *            the start menu item
+	 */
 	private static void startMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (currentExecutionThread != null)
@@ -205,7 +246,7 @@ public class PureSwingSystemTray
 					catch (InterruptedException ex)
 					{
 						logger.log(Level.INFO,
-							"Mouse tracking has thrown exeption with the following message:"
+							"Mouse tracking has thrown exception with the following message: "
 								+ ex.getLocalizedMessage());
 					}
 				}
@@ -238,7 +279,7 @@ public class PureSwingSystemTray
 							{
 								logger.log(Level.INFO,
 									"Set mouse position by tracking and went to sleep"
-										+ " has thrown exception with the following message:"
+										+ " has thrown exception with the following message: "
 										+ ex.getLocalizedMessage());
 							}
 						}
@@ -255,7 +296,7 @@ public class PureSwingSystemTray
 								logger.log(Level.INFO,
 									"Go to sleep with the difference of 'interval of seconds'"
 										+ " and 'interval of mouse movements check'"
-										+ " has thrown exception with the following message:"
+										+ " has thrown exception with the following message: "
 										+ e.getLocalizedMessage());
 							}
 						}
@@ -276,7 +317,7 @@ public class PureSwingSystemTray
 							logger.log(Level.INFO,
 								"Set mouse position by tracking and went to sleep"
 									+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
-									+ " has thrown exception with the following message:"
+									+ " has thrown exception with the following message: "
 									+ e.getLocalizedMessage());
 						}
 					}
@@ -291,6 +332,14 @@ public class PureSwingSystemTray
 		startItem.setEnabled(false);
 	}
 
+	/**
+	 * Stops the mouse movement and tracking threads, adjusting the system tray items accordingly
+	 *
+	 * @param stopItem
+	 *            the stop menu item
+	 * @param startItem
+	 *            the start menu item
+	 */
 	private static void stopMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (currentExecutionThread != null)

@@ -24,10 +24,18 @@
  */
 package io.github.astrapi69.silent.mouse;
 
+/**
+ * The abstract class {@link InterruptableThread} provides a template for threads that can be
+ * interrupted gracefully during execution.
+ */
 public abstract class InterruptableThread extends Thread
 {
+	/** A flag that indicates whether the thread is interrupted */
 	private boolean interrupted = false;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void run()
 	{
@@ -37,6 +45,9 @@ public abstract class InterruptableThread extends Thread
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void interrupt()
 	{
@@ -44,5 +55,9 @@ public abstract class InterruptableThread extends Thread
 		interrupted = true;
 	}
 
+	/**
+	 * Abstract method to be implemented by subclasses that defines the processing logic of the
+	 * thread
+	 */
 	protected abstract void process();
 }

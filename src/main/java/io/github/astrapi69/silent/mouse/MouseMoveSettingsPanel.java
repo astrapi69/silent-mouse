@@ -49,33 +49,98 @@ import io.github.astrapi69.swing.model.component.JMTextField;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * The {@link MouseMoveSettingsPanel} is a Swing panel for configuring mouse movement settings
+ * including intervals for movements, checking movements, and enabling mouse movement at startup
+ */
 @Getter
 public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 {
+	/** Constant for the "not set" option */
 	public static final String NOT_SET = "not set";
+
+	/** Preferences object to save and retrieve user settings */
 	private static final Preferences applicationPreferences = Preferences.userRoot()
 		.node(PureSwingSystemTray.class.getName());
+
+	/**
+	 * Combo box for selecting the X-axis movement value
+	 */
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableX;
+
+	/**
+	 * Combo box for selecting the Y-axis movement value
+	 */
 	private JMComboBox<Integer, GenericComboBoxModel<Integer>> cmbVariableY;
+
+	/**
+	 * Label for displaying the interval of seconds for mouse movements
+	 */
 	private JLabel lblIntervalOfSeconds;
+
+	/**
+	 * Label for displaying the interval of mouse movements check in seconds
+	 */
 	private JLabel lblIntervalOfMouseMovementsCheckInSeconds;
+
+	/**
+	 * Label for displaying the settings header
+	 */
 	private JLabel lblSettings;
+
+	/**
+	 * Label for displaying the description of X-axis movement
+	 */
 	private JLabel lblVariableX;
+
+	/**
+	 * Label for displaying the description of Y-axis movement
+	 */
 	private JLabel lblVariableY;
+
+	/**
+	 * Text field for inputting the interval of seconds for mouse movements
+	 */
 	private JMTextField txtIntervalOfSeconds;
+
+	/**
+	 * Text field for inputting the interval of mouse movements check in seconds
+	 */
 	private JMTextField txtIntervalOfMouseMovementsCheckInSeconds;
+
+	/**
+	 * Checkbox for enabling or disabling mouse movement on startup
+	 */
 	private JMCheckBox checkBoxMoveOnStartup;
 
+	/**
+	 * Instantiates a new {@link MouseMoveSettingsPanel} with the given model
+	 *
+	 * @param model
+	 *            the model containing the settings data
+	 */
 	public MouseMoveSettingsPanel(final IModel<SettingsModelBean> model)
 	{
 		super(model);
 	}
 
+	/**
+	 * Retrieves the application preferences used for saving user settings
+	 *
+	 * @return the application preferences
+	 */
 	public static Preferences getApplicationPreferences()
 	{
 		return applicationPreferences;
 	}
 
+	/**
+	 * Gets the text field model from the given action event
+	 *
+	 * @param actionEvent
+	 *            the action event
+	 * @return an optional containing the text field model if present
+	 */
 	@NotNull
 	private static Optional<IModel<String>> getJMTextFieldModel(ActionEvent actionEvent)
 	{
@@ -90,6 +155,9 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		return Optional.empty();
 	}
 
+	/**
+	 * Initializes the model with preferences, loading any previously saved settings
+	 */
 	private void initializeModelWithPreferences()
 	{
 		SettingsModelBean modelObject = getModelObject();
@@ -103,6 +171,9 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		SettingsModelBean.setModelFromPreferences(modelObject, applicationPreferences);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onInitializeComponents()
 	{
@@ -137,8 +208,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		lblIntervalOfSeconds.setText("Move mouse every time (in seconds)");
 		lblIntervalOfMouseMovementsCheckInSeconds
 			.setText("Check mouse movement every time (in seconds)");
-		final CheckedModel checkedModelBean;
-		checkedModelBean = CheckedModel.builder().build();
+
+		final CheckedModel checkedModelBean = CheckedModel.builder().build();
 		checkedModelBean.setChecked(getModelObject().isMoveOnStartup());
 		final IModel<Boolean> booleanModel = LambdaModel.of(checkedModelBean::isChecked,
 			checkedModelBean::setChecked);
@@ -152,10 +223,10 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 
 		cmbVariableY.setName("cmbVariableY");
 		cmbVariableY.addActionListener(this::onChangeCmbVariableY);
-		String interalOfSecondsAsString = getModelObject().getIntervalOfSeconds() != null
+
+		txtIntervalOfSeconds.setText(getModelObject().getIntervalOfSeconds() != null
 			? getModelObject().getIntervalOfSeconds().toString()
-			: "180";
-		txtIntervalOfSeconds.setText(interalOfSecondsAsString);
+			: "180");
 		txtIntervalOfSeconds.setName("txtIntervalOfSeconds");
 		txtIntervalOfSeconds.addActionListener(this::onChangeTxtIntervalOfSeconds);
 		txtIntervalOfSeconds.addFocusListener(new FocusAdapter()
@@ -166,17 +237,15 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfSeconds(Integer.valueOf(text));
-
 				getApplicationPreferences().put(SettingsModelBean.INTERVAL_OF_SECONDS,
 					getModelObject().getIntervalOfSeconds().toString());
 			}
 		});
-		String intervalOfMouseMovementsCheckInSecondsAsString = getModelObject()
-			.getIntervalOfMouseMovementsCheckInSeconds() != null
-				? getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString()
-				: "90";
+
 		txtIntervalOfMouseMovementsCheckInSeconds
-			.setText(intervalOfMouseMovementsCheckInSecondsAsString);
+			.setText(getModelObject().getIntervalOfMouseMovementsCheckInSeconds() != null
+				? getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString()
+				: "90");
 		txtIntervalOfMouseMovementsCheckInSeconds
 			.setName("txtIntervalOfMouseMovementsCheckInSeconds");
 		txtIntervalOfMouseMovementsCheckInSeconds
@@ -196,6 +265,12 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		});
 	}
 
+	/**
+	 * Action handler for the checkbox to update the move-on-startup setting
+	 *
+	 * @param actionEvent
+	 *            the action event triggered by checkbox interaction
+	 */
 	protected void onChangeCheckboxMoveOnStartup(final ActionEvent actionEvent)
 	{
 		JMCheckBox source = (JMCheckBox)actionEvent.getSource();
@@ -203,10 +278,14 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		getModelObject().setMoveOnStartup(moveOnStartup);
 		String moveOnStartupAsString = Boolean.toString(getModelObject().isMoveOnStartup());
 		getApplicationPreferences().put(SettingsModelBean.MOVE_ON_STARTUP, moveOnStartupAsString);
-		String foo = getApplicationPreferences().get(SettingsModelBean.MOVE_ON_STARTUP, "foo");
-		System.out.println(foo);
 	}
 
+	/**
+	 * Action handler for the combo box controlling movement on the Y axis
+	 *
+	 * @param actionEvent
+	 *            the action event triggered by combo box interaction
+	 */
 	@SuppressWarnings("unchecked")
 	protected void onChangeCmbVariableY(final ActionEvent actionEvent)
 	{
@@ -218,6 +297,12 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			getModelObject().getYAxis().toString());
 	}
 
+	/**
+	 * Action handler for the combo box controlling movement on the X axis
+	 *
+	 * @param actionEvent
+	 *            the action event triggered by combo box interaction
+	 */
 	@SuppressWarnings("unchecked")
 	protected void onChangeCmbVariableX(final ActionEvent actionEvent)
 	{
@@ -229,6 +314,12 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			getModelObject().getXAxis().toString());
 	}
 
+	/**
+	 * Action handler for the text field controlling the interval of mouse movements
+	 *
+	 * @param actionEvent
+	 *            the action event triggered by text field interaction
+	 */
 	protected void onChangeTxtIntervalOfSeconds(final ActionEvent actionEvent)
 	{
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
@@ -238,6 +329,12 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		});
 	}
 
+	/**
+	 * Action handler for the text field controlling the interval of checking mouse movements
+	 *
+	 * @param actionEvent
+	 *            the action event triggered by text field interaction
+	 */
 	protected void onChangeTxtIntervalOfMouseMovementsCheckInSeconds(final ActionEvent actionEvent)
 	{
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
@@ -249,12 +346,18 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		});
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onInitializeLayout()
 	{
 		this.onInitializeMigLayout();
 	}
 
+	/**
+	 * Initializes the layout of the panel using MigLayout
+	 */
 	protected void onInitializeMigLayout()
 	{
 		final MigLayout layout = new MigLayout();
@@ -274,5 +377,4 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		this.add(lblIntervalOfMouseMovementsCheckInSeconds);
 		this.add(txtIntervalOfMouseMovementsCheckInSeconds, "wrap");
 	}
-
 }

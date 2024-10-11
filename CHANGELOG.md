@@ -6,6 +6,7 @@ Version 2-SNAPSHOT
 
 ADDED:
 
+- added module-info.java file for modularization
 - new libs.versions.toml file for new automatic catalog versions update
 - new dependency 'io.github.astrapi69:roboter' in major version 1
 
