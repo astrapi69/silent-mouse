@@ -65,19 +65,19 @@ compile-only = [
 ]
 # Bundle of the core dependencies
 core-dependencies = [
-    "miglayout-swing",
-    "system-tray",
-    "model-data",
     "component-model",
     "icon-img-extensions",
-    "silk-icon-theme",
-    "swing-base-components",
-    "swing-model-components",
-    "swing-components",
-    "silly-collection",
-    "silly-bean",
-    "swingx-all",
+    "miglayout-swing",
+    "model-data",
     "roboter",
+    "silk-icon-theme",
+    "silly-bean",
+    "silly-collection",
+    "swing-base-components",
+    "swing-components",
+    "swing-model-components",
+    "swingx-all",
+    "system-tray",
 ]
 # Bundle of the izpack dependencies
 izpack = [
@@ -99,11 +99,11 @@ test-runtime-only = [
 unit-testing = [
     "commons-text",
     "file-worker",
-    "throwable",
-    "silly-io",
     "junit-jupiter",
     "junit-jupiter-extensions",
     "meanbean",
+    "silly-io",
+    "throwable",
 ]
 
 [plugins]
