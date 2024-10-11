@@ -11,6 +11,7 @@ gradle-plugin-version-catalog-update-version = "0.8.4"
 gradle-plugin-versions-version = "0.51.0"
 icon-img-extensions-version = "4"
 izpack-ant-version = "5.2.3"
+jobj-core-version = "9.1"
 junit-jupiter-extensions-version = "2"
 junit-jupiter-version = "5.11.2"
 lombok-version = "1.18.34"
@@ -35,6 +36,7 @@ component-model = { module = "io.github.astrapi69:component-model", version.ref 
 file-worker = { module = "io.github.astrapi69:file-worker", version.ref = "file-worker-version" }
 icon-img-extensions = { module = "io.github.astrapi69:icon-img-extensions", version.ref = "icon-img-extensions-version" }
 izpack-ant = { module = "org.codehaus.izpack:izpack-ant", version.ref = "izpack-ant-version" }
+jobj-core = { module = "io.github.astrapi69:jobj-core", version.ref = "jobj-core-version" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter-version" }
 junit-jupiter-extensions = { module = "io.github.astrapi69:junit-jupiter-extensions", version.ref = "junit-jupiter-extensions-version" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
@@ -67,6 +69,7 @@ compile-only = [
 core-dependencies = [
     "component-model",
     "icon-img-extensions",
+    "jobj-core",
     "miglayout-swing",
     "model-data",
     "roboter",

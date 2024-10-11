@@ -28,6 +28,7 @@ module io.github.astrapisixtynine.silent.mouse
 	requires component.model.main;
 	requires dorkbox.systemtray;
 	requires icon.img.extensions;
+	requires io.github.astrapisixtynine.jobj.core;
 	requires io.github.astrapisixtynine.swing.base.components;
 	requires io.github.astrapisixtynine.silly.collection;
 	requires io.github.astrapisixtynine.silly.bean;

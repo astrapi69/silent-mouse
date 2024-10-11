@@ -6,6 +6,17 @@ Version 2.1-SNAPSHOT
 
 ADDED:
 
+- new dependency 'io.github.astrapi69:jobj-core' in minor version 9.1
+
+CHANGED:
+
+- removed class InterruptableThread
+
+Version 2.0.1
+-------------
+
+ADDED:
+
 - added module-info.java file for modularization
 - new libs.versions.toml file for new automatic catalog versions update
 - new dependency 'io.github.astrapi69:roboter' in major version 1

@@ -39,6 +39,7 @@ import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.Separator;
 import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.icon.ImageIconFactory;
+import io.github.astrapi69.lang.thread.InterruptableThread;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.roboter.MouseExtensions;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
