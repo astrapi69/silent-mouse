@@ -8,6 +8,7 @@ dependencies {
     testCompileOnly libs.bundles.test.compile.only
     testAnnotationProcessor libs.bundles.test.annotation.processor
 
+    implementation libs.bundles.logging
     implementation libs.bundles.core.dependencies
 
     testImplementation libs.bundles.unit.testing

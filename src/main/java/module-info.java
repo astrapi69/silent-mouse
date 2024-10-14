@@ -28,12 +28,16 @@ module io.github.astrapisixtynine.silent.mouse
 	requires component.model.main;
 	requires dorkbox.systemtray;
 	requires icon.img.extensions;
+	requires io.github.astrapisixtynine.awt.extensions;
 	requires io.github.astrapisixtynine.jobj.core;
-	requires io.github.astrapisixtynine.swing.base.components;
+	requires io.github.astrapisixtynine.menu.action;
+	requires io.github.astrapisixtynine.resourcebundle.core;
 	requires io.github.astrapisixtynine.silly.collection;
 	requires io.github.astrapisixtynine.silly.bean;
+	requires io.github.astrapisixtynine.swing.base.components;
 	requires org.jetbrains.annotations;
 	requires roboter.main;
 	requires swing.model.components.main;
 	requires model.data;
+	requires jul.to.slf4j;
 }

@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright (C) 2022 Asterios Raptis
+ * Copyright (C) 2024 Asterios Raptis
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,16 +24,19 @@
  */
 package io.github.astrapi69.silent.mouse;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Robot;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.Separator;
@@ -42,45 +45,55 @@ import io.github.astrapi69.icon.ImageIconFactory;
 import io.github.astrapi69.lang.thread.InterruptableThread;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.roboter.MouseExtensions;
+import io.github.astrapi69.swing.base.ApplicationPanelFrame;
+import io.github.astrapi69.swing.base.BasePanel;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
 import io.github.astrapi69.swing.panel.info.InfoModelBean;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.java.Log;
 
 /**
- * The {@link PureSwingSystemTray} class handles system tray interactions and automates mouse
- * movements for the application. It provides features like starting, stopping, and configuring
- * mouse movement through a system tray menu
+ * The class {@link SilentMouseApplicationFrame} represents the main frame of the application that
+ * sets up and initializes the application window with specific settings and components
  */
-public class PureSwingSystemTray
+@Log
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class SilentMouseApplicationFrame extends ApplicationPanelFrame<ApplicationModelBean>
 {
-	/** Logger for this class */
-	static final Logger logger = Logger.getLogger(PureSwingSystemTray.class.getName());
+
+	/**
+	 * The single instance of {@link SilentMouseApplicationFrame}
+	 */
+	@Getter
+	private static SilentMouseApplicationFrame instance;
+
+	/** The main application panel */
+	ApplicationPanel applicationPanel;
 
 	/** Thread for executing mouse movements */
-	static InterruptableThread currentExecutionThread;
+	InterruptableThread currentExecutionThread;
 
 	/** Thread for tracking mouse movements */
-	static InterruptableThread mouseTrackThread;
+	InterruptableThread mouseTrackThread;
 
 	/** Map to track the mouse's positions over time */
-	static NavigableMap<LocalDateTime, Point> mouseTracks = new TreeMap<>();
+	NavigableMap<LocalDateTime, Point> mouseTracks;
 
 	/** Robot for automating mouse movements */
-	static Robot robot;
+	Robot robot;
 
 	/** Preferences object to store and retrieve user settings */
-	private static final Preferences applicationPreferences = Preferences.userRoot()
-		.node(PureSwingSystemTray.class.getName());
+	Preferences applicationPreferences;
 
 	/** Model bean containing the settings for mouse movements */
-	static SettingsModelBean settingsModelBean = SettingsModelBean
-		.setModelFromPreferences(SettingsModelBean.builder().intervalOfSeconds(180)
-			.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(false)
-			.build(), applicationPreferences);
+	SettingsModelBean settingsModelBean;
 
 	/** Panel for configuring the mouse movement settings */
-	static MouseMoveSettingsPanel mouseMoveSettingsPanel = new MouseMoveSettingsPanel(
-		BaseModel.of(settingsModelBean));
+	MouseMoveSettingsPanel mouseMoveSettingsPanel;
 
 	/**
 	 * Gets the {@link Robot} used for automating mouse movements
@@ -89,7 +102,7 @@ public class PureSwingSystemTray
 	 * @throws RuntimeException
 	 *             if unable to create a robot instance
 	 */
-	static Robot getRobot()
+	Robot getRobot()
 	{
 		if (robot == null)
 		{
@@ -106,25 +119,18 @@ public class PureSwingSystemTray
 	}
 
 	/**
-	 * The main entry point of the application
-	 *
-	 * @param args
-	 *            the arguments passed to the application
+	 * Constructs a new {@link SilentMouseApplicationFrame} with the specified title from the
+	 * resource bundle
 	 */
-	public static void main(final String[] args)
+	public SilentMouseApplicationFrame()
 	{
-		logger.setLevel(Level.FINE);
-		final JFrame frame = new JFrame("MouseTrayApp");
-		initializeComponents();
-		frame.setExtendedState(JFrame.ICONIFIED);
-		frame.pack();
-		frame.setVisible(false);
+		super(Messages.getString("mainframe.title"));
 	}
 
 	/**
 	 * Initializes the system tray components and sets up menu items
 	 */
-	private static void initializeComponents()
+	protected void initializeSystemTray()
 	{
 		SystemTray systemTray = SystemTray.get();
 		if (systemTray == null)
@@ -149,7 +155,6 @@ public class PureSwingSystemTray
 			systemTray.shutdown();
 			System.exit(0);
 		});
-
 		if (settingsModelBean.isMoveOnStartup())
 		{
 			startMoving(stopItem, startItem);
@@ -221,6 +226,7 @@ public class PureSwingSystemTray
 		systemTray.getMenu().add(exitItem).setShortcut('e');
 	}
 
+
 	/**
 	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
 	 *
@@ -229,7 +235,7 @@ public class PureSwingSystemTray
 	 * @param startItem
 	 *            the start menu item
 	 */
-	private static void startMoving(MenuItem stopItem, MenuItem startItem)
+	private void startMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (currentExecutionThread != null)
 		{
@@ -254,7 +260,7 @@ public class PureSwingSystemTray
 					}
 					catch (InterruptedException ex)
 					{
-						logger.log(Level.INFO,
+						log.log(Level.INFO,
 							"Mouse tracking has thrown exception with the following message: "
 								+ ex.getLocalizedMessage());
 					}
@@ -286,7 +292,7 @@ public class PureSwingSystemTray
 							}
 							catch (InterruptedException ex)
 							{
-								logger.log(Level.INFO,
+								log.log(Level.INFO,
 									"Set mouse position by tracking and went to sleep"
 										+ " has thrown exception with the following message: "
 										+ ex.getLocalizedMessage());
@@ -302,7 +308,7 @@ public class PureSwingSystemTray
 							}
 							catch (InterruptedException e)
 							{
-								logger.log(Level.INFO,
+								log.log(Level.INFO,
 									"Go to sleep with the difference of 'interval of seconds'"
 										+ " and 'interval of mouse movements check'"
 										+ " has thrown exception with the following message: "
@@ -323,11 +329,10 @@ public class PureSwingSystemTray
 						}
 						catch (InterruptedException e)
 						{
-							logger.log(Level.INFO,
-								"Set mouse position by tracking and went to sleep"
-									+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
-									+ " has thrown exception with the following message: "
-									+ e.getLocalizedMessage());
+							log.log(Level.INFO, "Set mouse position by tracking and went to sleep"
+								+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
+								+ " has thrown exception with the following message: "
+								+ e.getLocalizedMessage());
 						}
 					}
 				}
@@ -349,7 +354,7 @@ public class PureSwingSystemTray
 	 * @param startItem
 	 *            the start menu item
 	 */
-	private static void stopMoving(MenuItem stopItem, MenuItem startItem)
+	private void stopMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (currentExecutionThread != null)
 		{
@@ -373,4 +378,77 @@ public class PureSwingSystemTray
 			}
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onBeforeInitialize()
+	{
+		if (instance == null)
+		{
+			instance = this;
+		}
+		// initialize model and model object
+		mouseTracks = new TreeMap<>();
+		applicationPreferences = Preferences.userRoot()
+			.node(SilentMouseApplicationFrame.class.getName());
+
+		settingsModelBean = SettingsModelBean.setModelFromPreferences(SettingsModelBean.builder()
+			.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
+			.moveOnStartup(false).build(), applicationPreferences);
+		ApplicationModelBean applicationModelBean = ApplicationModelBean.builder()
+			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
+			.build();
+		setModel(BaseModel.of(applicationModelBean));
+		super.onBeforeInitialize();
+	}
+
+	@Override
+	protected void onInitializeComponents()
+	{
+		super.onInitializeComponents();
+		mouseMoveSettingsPanel = new MouseMoveSettingsPanel(BaseModel.of(settingsModelBean));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onAfterInitialize()
+	{
+		super.onAfterInitialize();
+		initializeSystemTray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String newIconPath()
+	{
+		return Messages.getString("global.icon.app.path");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected BasePanel<ApplicationModelBean> newMainComponent()
+	{
+		applicationPanel = newApplicationPanel();
+		return applicationPanel;
+	}
+
+	/**
+	 * Factory method for create a new {@link ApplicationPanel} object
+	 *
+	 * @return the new {@link ApplicationPanel} object
+	 */
+	protected ApplicationPanel newApplicationPanel()
+	{
+		ApplicationPanel applicationPanel = new ApplicationPanel(getModel());
+		return applicationPanel;
+	}
+
 }

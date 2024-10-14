@@ -7,10 +7,12 @@ Version 2.1-SNAPSHOT
 ADDED:
 
 - new dependency 'io.github.astrapi69:jobj-core' in minor version 9.1
+- new logging dependencies slf4j with jul
 
 CHANGED:
 
 - removed class InterruptableThread
+- replaced PureSwingSystemTray class with SilentMouseApplicationFrame
 
 Version 2.0.1
 -------------
