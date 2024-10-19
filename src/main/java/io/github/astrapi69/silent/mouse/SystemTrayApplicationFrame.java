@@ -45,6 +45,7 @@ import io.github.astrapi69.icon.ImageIconFactory;
 import io.github.astrapi69.lang.thread.InterruptableThread;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.roboter.MouseExtensions;
+import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
 import io.github.astrapi69.swing.base.ApplicationPanelFrame;
 import io.github.astrapi69.swing.base.BasePanel;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
@@ -56,20 +57,20 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.java.Log;
 
 /**
- * The class {@link SilentMouseApplicationFrame} represents the main frame of the application that
+ * The class {@link SystemTrayApplicationFrame} represents the main frame of the application that
  * sets up and initializes the application window with specific settings and components
  */
 @Log
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SilentMouseApplicationFrame extends ApplicationPanelFrame<ApplicationModelBean>
+public class SystemTrayApplicationFrame extends ApplicationPanelFrame<ApplicationModelBean>
 {
 
 	/**
-	 * The single instance of {@link SilentMouseApplicationFrame}
+	 * The single instance of {@link SystemTrayApplicationFrame}
 	 */
 	@Getter
-	private static SilentMouseApplicationFrame instance;
+	private static SystemTrayApplicationFrame instance;
 
 	/** The main application panel */
 	ApplicationPanel applicationPanel;
@@ -119,10 +120,10 @@ public class SilentMouseApplicationFrame extends ApplicationPanelFrame<Applicati
 	}
 
 	/**
-	 * Constructs a new {@link SilentMouseApplicationFrame} with the specified title from the
+	 * Constructs a new {@link SystemTrayApplicationFrame} with the specified title from the
 	 * resource bundle
 	 */
-	public SilentMouseApplicationFrame()
+	public SystemTrayApplicationFrame()
 	{
 		super(Messages.getString("mainframe.title"));
 	}
@@ -392,9 +393,9 @@ public class SilentMouseApplicationFrame extends ApplicationPanelFrame<Applicati
 		// initialize model and model object
 		mouseTracks = new TreeMap<>();
 		applicationPreferences = Preferences.userRoot()
-			.node(SilentMouseApplicationFrame.class.getName());
+			.node(SystemTrayApplicationFrame.class.getName());
 
-		settingsModelBean = SettingsModelBean.setModelFromPreferences(SettingsModelBean.builder()
+		settingsModelBean = SettingsExtensions.setModelFromPreferences(SettingsModelBean.builder()
 			.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
 			.moveOnStartup(false).build(), applicationPreferences);
 		ApplicationModelBean applicationModelBean = ApplicationModelBean.builder()

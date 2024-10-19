@@ -6,13 +6,17 @@ Version 2.1-SNAPSHOT
 
 ADDED:
 
+- new extension class SettingsExtensions for the model class SettingsModelBean
 - new dependency 'io.github.astrapi69:jobj-core' in minor version 9.1
 - new logging dependencies slf4j with jul
 
 CHANGED:
 
+- update gradle to new version 8.11-rc-1
+- update of gradle-plugin dependency 'com.diffplug.spotless:spotless-plugin-gradle' to new minor version 7.0.0.BETA3
 - removed class InterruptableThread
-- replaced PureSwingSystemTray class with SilentMouseApplicationFrame
+- replaced PureSwingSystemTray class with SystemTrayApplicationFrame
+- moved all extension and helper methods from class SettingsModelBean to class SettingsExtensions
 
 Version 2.0.1
 -------------

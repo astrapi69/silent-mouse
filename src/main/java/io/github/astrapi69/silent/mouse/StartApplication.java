@@ -51,7 +51,7 @@ public class StartApplication
 		loadLoggingFile();
 		setupJavaUtilLoggingToSlf4jBridge();
 		log.info("JUL logs are now routed to SLF4J.");
-		SilentMouseApplicationFrame frame = new SilentMouseApplicationFrame();
+		SystemTrayApplicationFrame frame = new SystemTrayApplicationFrame();
 		frame.setExtendedState(JFrame.ICONIFIED);
 		frame.pack();
 		frame.setVisible(false);

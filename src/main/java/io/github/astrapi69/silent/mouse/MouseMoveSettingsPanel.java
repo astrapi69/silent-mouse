@@ -37,6 +37,7 @@ import io.github.astrapi69.collection.pair.ValueBox;
 import io.github.astrapi69.component.model.check.CheckedModel;
 import io.github.astrapi69.model.LambdaModel;
 import io.github.astrapi69.model.api.IModel;
+import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
 import io.github.astrapi69.swing.base.BasePanel;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
 import io.github.astrapi69.swing.model.combobox.GenericComboBoxModel;
@@ -58,7 +59,7 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 
 	/** Preferences object to save and retrieve user settings */
 	private static final Preferences applicationPreferences = Preferences.userRoot()
-		.node(SilentMouseApplicationFrame.class.getName());
+		.node(SystemTrayApplicationFrame.class.getName());
 
 	/**
 	 * Combo box for selecting the X-axis movement value
@@ -206,8 +207,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfSeconds(Integer.valueOf(text));
-				SilentMouseApplicationFrame.getInstance().getApplicationPreferences().put(
-					SettingsModelBean.INTERVAL_OF_SECONDS,
+				SystemTrayApplicationFrame.getInstance().getApplicationPreferences().put(
+					SettingsExtensions.INTERVAL_OF_SECONDS,
 					getModelObject().getIntervalOfSeconds().toString());
 			}
 		});
@@ -228,8 +229,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 				JMTextField source = (JMTextField)event.getSource();
 				final String text = source.getText();
 				getModelObject().setIntervalOfMouseMovementsCheckInSeconds(Integer.valueOf(text));
-				SilentMouseApplicationFrame.getInstance().getApplicationPreferences().put(
-					SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
+				SystemTrayApplicationFrame.getInstance().getApplicationPreferences().put(
+					SettingsExtensions.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
 					getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString());
 			}
 		});
@@ -247,8 +248,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		Boolean moveOnStartup = source.getPropertyModel().getObject();
 		getModelObject().setMoveOnStartup(moveOnStartup);
 		String moveOnStartupAsString = Boolean.toString(getModelObject().isMoveOnStartup());
-		SilentMouseApplicationFrame.getInstance().getApplicationPreferences()
-			.put(SettingsModelBean.MOVE_ON_STARTUP, moveOnStartupAsString);
+		SystemTrayApplicationFrame.getInstance().getApplicationPreferences()
+			.put(SettingsExtensions.MOVE_ON_STARTUP, moveOnStartupAsString);
 	}
 
 	/**
@@ -264,8 +265,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			.getSource();
 		final Object selectedItem = source.getModel().getSelectedItem();
 		getModelObject().setYAxis(Integer.valueOf(selectedItem.toString()));
-		SilentMouseApplicationFrame.getInstance().getApplicationPreferences()
-			.put(SettingsModelBean.Y_AXIS, getModelObject().getYAxis().toString());
+		SystemTrayApplicationFrame.getInstance().getApplicationPreferences()
+			.put(SettingsExtensions.Y_AXIS, getModelObject().getYAxis().toString());
 	}
 
 	/**
@@ -281,8 +282,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 			.getSource();
 		final Object selectedItem = source.getModel().getSelectedItem();
 		getModelObject().setXAxis(Integer.valueOf(selectedItem.toString()));
-		SilentMouseApplicationFrame.getInstance().getApplicationPreferences()
-			.put(SettingsModelBean.X_AXIS, getModelObject().getXAxis().toString());
+		SystemTrayApplicationFrame.getInstance().getApplicationPreferences()
+			.put(SettingsExtensions.X_AXIS, getModelObject().getXAxis().toString());
 	}
 
 	/**
@@ -295,8 +296,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 	{
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
 			getModelObject().setIntervalOfSeconds(Integer.valueOf(propertyModel.getObject()));
-			SilentMouseApplicationFrame.getInstance().getApplicationPreferences().put(
-				SettingsModelBean.INTERVAL_OF_SECONDS,
+			SystemTrayApplicationFrame.getInstance().getApplicationPreferences().put(
+				SettingsExtensions.INTERVAL_OF_SECONDS,
 				getModelObject().getIntervalOfSeconds().toString());
 		});
 	}
@@ -312,8 +313,8 @@ public class MouseMoveSettingsPanel extends BasePanel<SettingsModelBean>
 		getJMTextFieldModel(actionEvent).ifPresent(propertyModel -> {
 			getModelObject().setIntervalOfMouseMovementsCheckInSeconds(
 				Integer.valueOf(propertyModel.getObject()));
-			SilentMouseApplicationFrame.getInstance().getApplicationPreferences().put(
-				SettingsModelBean.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
+			SystemTrayApplicationFrame.getInstance().getApplicationPreferences().put(
+				SettingsExtensions.INTERVAL_OF_MOUSE_MOVEMENTS_CHECK_IN_SECONDS,
 				getModelObject().getIntervalOfMouseMovementsCheckInSeconds().toString());
 		});
 	}
