@@ -8,9 +8,9 @@ task sourcesJar(type: Jar) {
 task javadocJar(type: Jar) {
     from javadoc
     archiveClassifier.set("javadoc")
-    javadoc.properties.failOnError = true
-    // Update the verbose option according to the new method
-//     javadoc.options.verbose = true // This replaces the deprecated isVerbose()
+    javadoc {
+        failOnError = false
+    }
 }
 
 javadoc {

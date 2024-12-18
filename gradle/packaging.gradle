@@ -19,18 +19,17 @@ jar {
                 "Build-OS": "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}")
     }
 }
-
-task withAllDependendiesJar(type: Jar) {
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+// Task to create jar with all dependencies
+tasks.register("withAllDependendiesJar", Jar) {
+    // Ensure the `build` task runs before this task
+    dependsOn build
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest.from jar.manifest
-    archiveClassifier = "all"
+    archiveClassifier.set("all")
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
     }
+    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
     with jar
 }
 
