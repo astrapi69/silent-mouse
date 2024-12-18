@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright (C) 2024 Asterios Raptis
+ * Copyright (C) 2022 Asterios Raptis
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,27 +24,19 @@
  */
 package io.github.astrapi69.silent.mouse;
 
-import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Robot;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.logging.Level;
 import java.util.prefs.Preferences;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.Separator;
 import dorkbox.systemTray.SystemTray;
-import io.github.astrapi69.icon.ImageIconFactory;
-import io.github.astrapi69.lang.thread.InterruptableThread;
 import io.github.astrapi69.model.BaseModel;
-import io.github.astrapi69.roboter.MouseExtensions;
 import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
 import io.github.astrapi69.swing.base.ApplicationPanelFrame;
 import io.github.astrapi69.swing.base.BasePanel;
@@ -75,17 +67,8 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	/** The main application panel */
 	ApplicationPanel applicationPanel;
 
-	/** Thread for executing mouse movements */
-	InterruptableThread currentExecutionThread;
-
-	/** Thread for tracking mouse movements */
-	InterruptableThread mouseTrackThread;
-
 	/** Map to track the mouse's positions over time */
 	NavigableMap<LocalDateTime, Point> mouseTracks;
-
-	/** Robot for automating mouse movements */
-	Robot robot;
 
 	/** Preferences object to store and retrieve user settings */
 	Preferences applicationPreferences;
@@ -96,28 +79,8 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	/** Panel for configuring the mouse movement settings */
 	MouseMoveSettingsPanel mouseMoveSettingsPanel;
 
-	/**
-	 * Gets the {@link Robot} used for automating mouse movements
-	 *
-	 * @return the robot instance
-	 * @throws RuntimeException
-	 *             if unable to create a robot instance
-	 */
-	Robot getRobot()
-	{
-		if (robot == null)
-		{
-			try
-			{
-				robot = new Robot();
-			}
-			catch (AWTException e)
-			{
-				throw new RuntimeException(e);
-			}
-		}
-		return robot;
-	}
+	/** The manager class for handle the mouse movement */
+	private MouseMovementManager mouseMovementManager;
 
 	/**
 	 * Constructs a new {@link SystemTrayApplicationFrame} with the specified title from the
@@ -139,12 +102,10 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			throw new RuntimeException("Unable to load SystemTray!");
 		}
 
-		ImageIcon trayImageIcon = ImageIconFactory
-			.newImageIcon("io/github/astrapi69/silk/icons/anchor.png", "Keep moving");
-		Image image = trayImageIcon.getImage();
+		Image image = IconPreloader.getTrayImageIcon().getImage();
 		systemTray.setImage(image);
 
-		systemTray.setStatus("Not Started");
+		systemTray.setStatus("Initializing...");
 
 		MenuItem startItem = new MenuItem("Start");
 		MenuItem stopItem = new MenuItem("Stop");
@@ -173,11 +134,6 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 					settingsModelBean.setIntervalOfSeconds(Integer.valueOf(text));
 				}
 				settingsModelBean = mouseMoveSettingsPanel.getModelObject();
-				if (currentExecutionThread != null && currentExecutionThread.isAlive())
-				{
-					stopMoving(stopItem, startItem);
-					startMoving(stopItem, startItem);
-				}
 			}
 		});
 
@@ -205,8 +161,9 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
 		});
 
-		stopItem
-			.setEnabled(currentExecutionThread != null && !currentExecutionThread.isInterrupted());
+		stopItem.setEnabled(mouseMovementManager.getCurrentExecutionThread() != null
+			&& !mouseMovementManager.getCurrentExecutionThread().isInterrupted());
+
 		stopItem.setCallback(e -> {
 			stopMoving(stopItem, startItem);
 			systemTray.setStatus("Stopped Moving");
@@ -225,8 +182,10 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 		systemTray.getMenu().add(stopItem).setShortcut('s');
 		systemTray.getMenu().add(new Separator());
 		systemTray.getMenu().add(exitItem).setShortcut('e');
-	}
 
+		// Ensure status is set last
+		systemTray.setStatus("Ready");
+	}
 
 	/**
 	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
@@ -238,113 +197,17 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	 */
 	private void startMoving(MenuItem stopItem, MenuItem startItem)
 	{
-		if (currentExecutionThread != null)
+		if (mouseMovementManager != null)
 		{
-			currentExecutionThread.interrupt();
+			log.info("Starting mouse movement...");
+			mouseMovementManager.start();
+			stopItem.setEnabled(true);
+			startItem.setEnabled(false);
 		}
-		if (mouseTrackThread != null)
+		else
 		{
-			mouseTrackThread.interrupt();
+			log.warning("MouseMovementManager is null. Unable to start mouse movement.");
 		}
-		mouseTrackThread = new InterruptableThread()
-		{
-			@Override
-			protected void process()
-			{
-				while (!isInterrupted())
-				{
-					try
-					{
-						mouseTracks.put(LocalDateTime.now(), MouseExtensions.getMousePosition());
-						Thread.sleep(
-							settingsModelBean.getIntervalOfMouseMovementsCheckInSeconds() * 1000);
-					}
-					catch (InterruptedException ex)
-					{
-						log.log(Level.INFO,
-							"Mouse tracking has thrown exception with the following message: "
-								+ ex.getLocalizedMessage());
-					}
-				}
-			}
-		};
-		currentExecutionThread = new InterruptableThread()
-		{
-			@Override
-			protected void process()
-			{
-				while (!isInterrupted())
-				{
-					final Map.Entry<LocalDateTime, Point> lastTrackedMousePointEntry = mouseTracks
-						.lastEntry();
-					final Point currentMousePosition = MouseExtensions.getMousePosition();
-					if (lastTrackedMousePointEntry != null)
-					{
-						final Point lastTrackedMousePoint = lastTrackedMousePointEntry.getValue();
-						// mouse not moved
-						if (lastTrackedMousePoint.equals(currentMousePosition))
-						{
-							MouseExtensions.setMousePosition(getRobot(),
-								currentMousePosition.x + settingsModelBean.getXAxis(),
-								currentMousePosition.y + settingsModelBean.getYAxis());
-							try
-							{
-								Thread.sleep(settingsModelBean.getIntervalOfSeconds() * 1000);
-							}
-							catch (InterruptedException ex)
-							{
-								log.log(Level.INFO,
-									"Set mouse position by tracking and went to sleep"
-										+ " has thrown exception with the following message: "
-										+ ex.getLocalizedMessage());
-							}
-						}
-						else
-						{
-							int diff = settingsModelBean.getIntervalOfSeconds()
-								- settingsModelBean.getIntervalOfMouseMovementsCheckInSeconds();
-							try
-							{
-								Thread.sleep(diff);
-							}
-							catch (InterruptedException e)
-							{
-								log.log(Level.INFO,
-									"Go to sleep with the difference of 'interval of seconds'"
-										+ " and 'interval of mouse movements check'"
-										+ " has thrown exception with the following message: "
-										+ e.getLocalizedMessage());
-							}
-						}
-					}
-					else
-					{
-						MouseExtensions.setMousePosition(getRobot(),
-							currentMousePosition.x + settingsModelBean.getXAxis(),
-							currentMousePosition.y + settingsModelBean.getYAxis());
-						try
-						{
-							Thread.sleep(
-								mouseMoveSettingsPanel.getModelObject().getIntervalOfSeconds()
-									* 1000);
-						}
-						catch (InterruptedException e)
-						{
-							log.log(Level.INFO, "Set mouse position by tracking and went to sleep"
-								+ " where 'lastTrackedMousePoint is not equal to currentMousePosition'"
-								+ " has thrown exception with the following message: "
-								+ e.getLocalizedMessage());
-						}
-					}
-				}
-			}
-		};
-		mouseTrackThread.start();
-		mouseTrackThread.setPriority(Thread.MIN_PRIORITY);
-		currentExecutionThread.start();
-		currentExecutionThread.setPriority(Thread.MIN_PRIORITY);
-		stopItem.setEnabled(true);
-		startItem.setEnabled(false);
 	}
 
 	/**
@@ -357,26 +220,16 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	 */
 	private void stopMoving(MenuItem stopItem, MenuItem startItem)
 	{
-		if (currentExecutionThread != null)
+		if (mouseMovementManager != null)
 		{
-			currentExecutionThread.setPriority(Thread.MIN_PRIORITY);
-			currentExecutionThread.interrupt();
-			while (!currentExecutionThread.isInterrupted())
-			{
-				currentExecutionThread.interrupt();
-			}
+			log.info("Stopping mouse movement...");
+			mouseMovementManager.stop();
 			stopItem.setEnabled(false);
 			startItem.setEnabled(true);
 		}
-
-		if (mouseTrackThread != null)
+		else
 		{
-			mouseTrackThread.setPriority(Thread.MIN_PRIORITY);
-			mouseTrackThread.interrupt();
-			while (!mouseTrackThread.isInterrupted())
-			{
-				mouseTrackThread.interrupt();
-			}
+			log.warning("MouseMovementManager is null. Unable to stop mouse movement.");
 		}
 	}
 
@@ -401,6 +254,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 		ApplicationModelBean applicationModelBean = ApplicationModelBean.builder()
 			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
 			.build();
+		mouseMovementManager = new MouseMovementManager(settingsModelBean);
 		setModel(BaseModel.of(applicationModelBean));
 		super.onBeforeInitialize();
 	}
@@ -410,6 +264,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	{
 		super.onInitializeComponents();
 		mouseMoveSettingsPanel = new MouseMoveSettingsPanel(BaseModel.of(settingsModelBean));
+		initializeSystemTray();
 	}
 
 	/**
@@ -419,7 +274,6 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	protected void onAfterInitialize()
 	{
 		super.onAfterInitialize();
-		initializeSystemTray();
 	}
 
 	/**

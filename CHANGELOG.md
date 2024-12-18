@@ -4,7 +4,10 @@
 Version 2.1-SNAPSHOT
 -------------
 
-ADDED:
+### Added
+
+- IconPreloader class to preload and cache tray icons, reducing startup delays.
+- Comprehensive Javadoc for the IconPreloader class to enhance code readability and maintainability.
 
 - new extension class SettingsExtensions for the model class SettingsModelBean
 - new dependency 'io.github.astrapi69:jobj-core' in minor version 9.1

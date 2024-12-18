@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright (C) 2024 Asterios Raptis
+ * Copyright (C) 2022 Asterios Raptis
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,33 +24,62 @@
  */
 package io.github.astrapi69.silent.mouse;
 
-import java.io.IOException;
-import java.util.logging.LogManager;
-
 import javax.swing.JFrame;
 
-import org.slf4j.bridge.SLF4JBridgeHandler;
-
+import io.github.astrapisixtynine.easy.logger.LoggingConfiguration;
 import lombok.extern.java.Log;
 
 /**
- * The class {@link StartApplication} starts the application
+ * The class {@link StartApplication} starts the application as a service or a standard application
  */
 @Log
 public class StartApplication
 {
 
+	private static boolean running = true;
+
 	/**
-	 * The main method that starts the application
+	 * Main method to start the application in standalone mode
 	 *
 	 * @param args
 	 *            the arguments passed to the application
 	 */
 	public static void main(final String[] args)
 	{
-		loadLoggingFile();
-		setupJavaUtilLoggingToSlf4jBridge();
-		log.info("JUL logs are now routed to SLF4J.");
+		if (args.length > 0 && "service".equalsIgnoreCase(args[0]))
+		{
+			start(); // Service mode
+		}
+		else
+		{
+			run(); // Standalone mode
+		}
+	}
+
+	/**
+	 * Starts the service
+	 */
+	public static void start()
+	{
+		LoggingConfiguration.setup();
+		log.info("Service started...");
+		SettingsModelBean settingsModelBean = SettingsModelBean.builder().intervalOfSeconds(180)
+			.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(true)
+			.build();
+
+		MouseMovementManager manager = new MouseMovementManager(settingsModelBean);
+
+		Runtime.getRuntime().addShutdownHook(new Thread(manager::stop));
+		manager.start();
+	}
+
+	/**
+	 * Runs the application in standalone mode
+	 */
+	public static void run()
+	{
+		LoggingConfiguration.setup();
+		log.info("Application started in standalone mode.");
 		SystemTrayApplicationFrame frame = new SystemTrayApplicationFrame();
 		frame.setExtendedState(JFrame.ICONIFIED);
 		frame.pack();
@@ -58,29 +87,11 @@ public class StartApplication
 	}
 
 	/**
-	 * Sets up the SLF4J bridge handler to capture JUL logs. It removes the default JUL loggers and
-	 * installs the SLF4J bridge handler to capture JUL logs
+	 * Stops the service
 	 */
-	public static void setupJavaUtilLoggingToSlf4jBridge()
+	public static void stop()
 	{
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
+		log.info("Service stopping...");
+		running = false;
 	}
-
-	/**
-	 * Load the logging properties file to the {@link LogManager}
-	 */
-	public static void loadLoggingFile()
-	{
-		try
-		{
-			LogManager.getLogManager().readConfiguration(
-				StartApplication.class.getClassLoader().getResourceAsStream("logging.properties"));
-		}
-		catch (IOException e)
-		{
-			System.err.println("Could not load logging properties file");
-		}
-	}
-
 }
