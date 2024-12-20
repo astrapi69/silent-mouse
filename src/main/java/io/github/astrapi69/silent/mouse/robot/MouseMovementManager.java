@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse;
+package io.github.astrapi69.silent.mouse.robot;
 
 import java.awt.AWTException;
 import java.awt.Point;
@@ -35,6 +35,7 @@ import java.util.logging.Level;
 
 import io.github.astrapi69.lang.thread.InterruptableThread;
 import io.github.astrapi69.roboter.MouseExtensions;
+import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import lombok.Getter;
 import lombok.extern.java.Log;
 

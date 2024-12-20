@@ -22,27 +22,27 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse;
+package io.github.astrapi69.silent.mouse.frame;
 
-import java.awt.Image;
 import java.awt.Point;
 import java.time.LocalDateTime;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-import javax.swing.JOptionPane;
-
 import dorkbox.systemTray.MenuItem;
-import dorkbox.systemTray.Separator;
-import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.model.BaseModel;
+import io.github.astrapi69.silent.mouse.i18n.Messages;
+import io.github.astrapi69.silent.mouse.model.ApplicationModelBean;
 import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
+import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
+import io.github.astrapi69.silent.mouse.panel.ApplicationPanel;
+import io.github.astrapi69.silent.mouse.panel.MouseMoveSettingsPanel;
+import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
+import io.github.astrapi69.silent.mouse.system.tray.DefaultSystemTrayHandler;
+import io.github.astrapi69.silent.mouse.system.tray.SystemTrayHandler;
 import io.github.astrapi69.swing.base.ApplicationPanelFrame;
 import io.github.astrapi69.swing.base.BasePanel;
-import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
-import io.github.astrapi69.swing.panel.info.AppInfoPanel;
-import io.github.astrapi69.swing.panel.info.InfoModelBean;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -64,6 +64,9 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	@Getter
 	private static SystemTrayApplicationFrame instance;
 
+	/** The manager class for handle the system tray */
+	SystemTrayHandler systemTrayHandler;
+
 	/** The main application panel */
 	ApplicationPanel applicationPanel;
 
@@ -80,7 +83,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	MouseMoveSettingsPanel mouseMoveSettingsPanel;
 
 	/** The manager class for handle the mouse movement */
-	private MouseMovementManager mouseMovementManager;
+	MouseMovementManager mouseMovementManager;
 
 	/**
 	 * Constructs a new {@link SystemTrayApplicationFrame} with the specified title from the
@@ -92,102 +95,6 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	}
 
 	/**
-	 * Initializes the system tray components and sets up menu items
-	 */
-	protected void initializeSystemTray()
-	{
-		SystemTray systemTray = SystemTray.get();
-		if (systemTray == null)
-		{
-			throw new RuntimeException("Unable to load SystemTray!");
-		}
-
-		Image image = IconPreloader.getTrayImageIcon().getImage();
-		systemTray.setImage(image);
-
-		systemTray.setStatus("Initializing...");
-
-		MenuItem startItem = new MenuItem("Start");
-		MenuItem stopItem = new MenuItem("Stop");
-		MenuItem exitItem = new MenuItem("Exit");
-		MenuItem aboutItem = new MenuItem("About");
-		MenuItem settingsItem = new MenuItem("Settings");
-
-		exitItem.setCallback(e -> {
-			systemTray.shutdown();
-			System.exit(0);
-		});
-		if (settingsModelBean.isMoveOnStartup())
-		{
-			startMoving(stopItem, startItem);
-			systemTray.setStatus("Moving around");
-		}
-
-		settingsItem.setCallback(e -> {
-			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(
-				mouseMoveSettingsPanel, "Settings", mouseMoveSettingsPanel.getCmbVariableX());
-			if (option == JOptionPane.OK_OPTION)
-			{
-				final String text = mouseMoveSettingsPanel.getTxtIntervalOfSeconds().getText();
-				if (text != null)
-				{
-					settingsModelBean.setIntervalOfSeconds(Integer.valueOf(text));
-				}
-				settingsModelBean = mouseMoveSettingsPanel.getModelObject();
-			}
-		});
-
-		aboutItem.setCallback(e -> {
-			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
-				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis") // !!!
-				// IMPORTANT
-				// Change
-				// version
-				// on
-				// deployment
-				// IMPORTANT
-				// !!!
-				.labelVersion("Version:").version("2.0.1") // !!!
-				// IMPORTANT
-				// Change
-				// version
-				// on
-				// deployment
-				// IMPORTANT
-				// !!!
-				.licence("This Software is licensed under the MIT Licence").build();
-			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
-			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
-		});
-
-		stopItem.setEnabled(mouseMovementManager.getCurrentExecutionThread() != null
-			&& !mouseMovementManager.getCurrentExecutionThread().isInterrupted());
-
-		stopItem.setCallback(e -> {
-			stopMoving(stopItem, startItem);
-			systemTray.setStatus("Stopped Moving");
-		});
-
-		startItem.setCallback(e -> {
-			startMoving(stopItem, startItem);
-			systemTray.setStatus("Moving around");
-		});
-
-		// Add components to pop-up menu
-		systemTray.getMenu().add(aboutItem).setShortcut('b');
-		systemTray.getMenu().add(settingsItem).setShortcut('t');
-		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(startItem).setShortcut('a');
-		systemTray.getMenu().add(stopItem).setShortcut('s');
-		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(exitItem).setShortcut('e');
-
-		// Ensure status is set last
-		systemTray.setStatus("Ready");
-	}
-
-	/**
 	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
 	 *
 	 * @param stopItem
@@ -195,7 +102,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	 * @param startItem
 	 *            the start menu item
 	 */
-	private void startMoving(MenuItem stopItem, MenuItem startItem)
+	public void startMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (mouseMovementManager != null)
 		{
@@ -218,7 +125,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	 * @param startItem
 	 *            the start menu item
 	 */
-	private void stopMoving(MenuItem stopItem, MenuItem startItem)
+	public void stopMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (mouseMovementManager != null)
 		{
@@ -255,6 +162,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
 			.build();
 		mouseMovementManager = new MouseMovementManager(settingsModelBean);
+		systemTrayHandler = new DefaultSystemTrayHandler();
 		setModel(BaseModel.of(applicationModelBean));
 		super.onBeforeInitialize();
 	}
@@ -264,7 +172,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	{
 		super.onInitializeComponents();
 		mouseMoveSettingsPanel = new MouseMoveSettingsPanel(BaseModel.of(settingsModelBean));
-		initializeSystemTray();
+		systemTrayHandler.initialize(this, settingsModelBean);
 	}
 
 	/**
@@ -302,8 +210,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	 */
 	protected ApplicationPanel newApplicationPanel()
 	{
-		ApplicationPanel applicationPanel = new ApplicationPanel(getModel());
-		return applicationPanel;
+		return new ApplicationPanel(getModel());
 	}
 
 }

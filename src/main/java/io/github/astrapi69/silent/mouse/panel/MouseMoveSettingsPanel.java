@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse;
+package io.github.astrapi69.silent.mouse.panel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -37,7 +37,9 @@ import io.github.astrapi69.collection.pair.ValueBox;
 import io.github.astrapi69.component.model.check.CheckedModel;
 import io.github.astrapi69.model.LambdaModel;
 import io.github.astrapi69.model.api.IModel;
+import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
 import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
+import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.swing.base.BasePanel;
 import io.github.astrapi69.swing.document.NumberValuesDocument;
 import io.github.astrapi69.swing.model.combobox.GenericComboBoxModel;

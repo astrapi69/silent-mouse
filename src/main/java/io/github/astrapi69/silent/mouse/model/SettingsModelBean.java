@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse;
+package io.github.astrapi69.silent.mouse.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,9 +31,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 /**
- * The {@link io.github.astrapi69.silent.mouse.SettingsModelBean} class represents the configuration
- * settings for mouse movements, including axis movements, interval settings, and whether the mouse
- * movement starts on startup
+ * The {@link SettingsModelBean} class represents the configuration settings for mouse movements,
+ * including axis movements, interval settings, and whether the mouse movement starts on startup
  */
 @Data
 @SuperBuilder(toBuilder = true)
@@ -55,5 +54,4 @@ public class SettingsModelBean
 	/** Flag for enabling mouse movement on startup */
 	@Builder.Default
 	boolean moveOnStartup = true;
-
 }

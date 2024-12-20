@@ -26,10 +26,10 @@ package io.github.astrapi69.silent.mouse.model;
 
 
 /**
- * The {@link SettingsModelBean} class represents the configuration settings for mouse movements,
+ * The {@link SettingsModelBean_} class represents the configuration settings for mouse movements,
  * including axis movements, interval settings, and whether the mouse movement starts on startup
  */
-public class SettingsModelBean
+public class SettingsModelBean_
 {
 	/**
 	 * Constant for the "not set" option
@@ -77,7 +77,7 @@ public class SettingsModelBean
 	private boolean moveOnStartup = true;
 
 	/**
-	 * Constructor for creating a {@link SettingsModelBean} with specific settings
+	 * Constructor for creating a {@link SettingsModelBean_} with specific settings
 	 *
 	 * @param xAxis
 	 *            the X-axis movement value
@@ -90,7 +90,7 @@ public class SettingsModelBean
 	 * @param moveOnStartup
 	 *            whether to move the mouse on startup
 	 */
-	public SettingsModelBean(Integer xAxis, Integer yAxis, Integer intervalOfSeconds,
+	public SettingsModelBean_(Integer xAxis, Integer yAxis, Integer intervalOfSeconds,
 		Integer intervalOfMouseMovementsCheckInSeconds, boolean moveOnStartup)
 	{
 		this.xAxis = xAxis;
@@ -101,19 +101,19 @@ public class SettingsModelBean
 	}
 
 	/**
-	 * Default constructor for creating an empty {@link SettingsModelBean}
+	 * Default constructor for creating an empty {@link SettingsModelBean_}
 	 */
-	public SettingsModelBean()
+	public SettingsModelBean_()
 	{
 	}
 
 	/**
-	 * Builder-based constructor for {@link SettingsModelBean}
+	 * Builder-based constructor for {@link SettingsModelBean_}
 	 *
 	 * @param b
-	 *            the builder to create the {@link SettingsModelBean}
+	 *            the builder to create the {@link SettingsModelBean_}
 	 */
-	protected SettingsModelBean(SettingsModelBeanBuilder<?, ?> b)
+	protected SettingsModelBean_(SettingsModelBeanBuilder<?, ?> b)
 	{
 		this.xAxis = b.xAxis$value;
 		this.yAxis = b.yAxis$value;
@@ -287,9 +287,9 @@ public class SettingsModelBean
 	{
 		if (o == this)
 			return true;
-		if (!(o instanceof SettingsModelBean))
+		if (!(o instanceof SettingsModelBean_))
 			return false;
-		final SettingsModelBean other = (SettingsModelBean)o;
+		final SettingsModelBean_ other = (SettingsModelBean_)o;
 		if (!other.canEqual((Object)this))
 			return false;
 		final Object this$xAxis = this.getXAxis();
@@ -329,7 +329,7 @@ public class SettingsModelBean
 	 */
 	protected boolean canEqual(final Object other)
 	{
-		return other instanceof SettingsModelBean;
+		return other instanceof SettingsModelBean_;
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class SettingsModelBean
 	 * @param <B>
 	 *            the type parameter
 	 */
-	public static abstract class SettingsModelBeanBuilder<C extends SettingsModelBean, B extends SettingsModelBeanBuilder<C, B>>
+	public static abstract class SettingsModelBeanBuilder<C extends SettingsModelBean_, B extends SettingsModelBeanBuilder<C, B>>
 	{
 		/**
 		 * The X axis value.
@@ -427,7 +427,7 @@ public class SettingsModelBean
 		 */
 		boolean moveOnStartup$set;
 
-		private static void $fillValuesFromInstanceIntoBuilder(SettingsModelBean instance,
+		private static void $fillValuesFromInstanceIntoBuilder(SettingsModelBean_ instance,
 			SettingsModelBeanBuilder<?, ?> b)
 		{
 			b.xAxis(instance.xAxis);
@@ -548,7 +548,7 @@ public class SettingsModelBean
 
 	private static final class SettingsModelBeanBuilderImpl
 		extends
-			SettingsModelBeanBuilder<SettingsModelBean, SettingsModelBeanBuilderImpl>
+			SettingsModelBeanBuilder<SettingsModelBean_, SettingsModelBeanBuilderImpl>
 	{
 		private SettingsModelBeanBuilderImpl()
 		{
@@ -559,30 +559,30 @@ public class SettingsModelBean
 			return this;
 		}
 
-		public SettingsModelBean build()
+		public SettingsModelBean_ build()
 		{
 			if (!this.xAxis$set)
 			{
-				this.xAxis$value = SettingsModelBean.$default$xAxis();
+				this.xAxis$value = SettingsModelBean_.$default$xAxis();
 			}
 			if (!this.yAxis$set)
 			{
-				this.yAxis$value = SettingsModelBean.$default$yAxis();
+				this.yAxis$value = SettingsModelBean_.$default$yAxis();
 			}
 			if (!this.intervalOfSeconds$set)
 			{
-				this.intervalOfSeconds$value = SettingsModelBean.$default$intervalOfSeconds();
+				this.intervalOfSeconds$value = SettingsModelBean_.$default$intervalOfSeconds();
 			}
 			if (!this.intervalOfMouseMovementsCheckInSeconds$set)
 			{
-				this.intervalOfMouseMovementsCheckInSeconds$value = SettingsModelBean
+				this.intervalOfMouseMovementsCheckInSeconds$value = SettingsModelBean_
 					.$default$intervalOfMouseMovementsCheckInSeconds();
 			}
 			if (!this.moveOnStartup$set)
 			{
-				this.moveOnStartup$value = SettingsModelBean.$default$moveOnStartup();
+				this.moveOnStartup$value = SettingsModelBean_.$default$moveOnStartup();
 			}
-			SettingsModelBean settingsModelBean = new SettingsModelBean(this);
+			SettingsModelBean_ settingsModelBean = new SettingsModelBean_(this);
 			return settingsModelBean;
 		}
 	}

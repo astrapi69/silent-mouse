@@ -26,8 +26,9 @@ package io.github.astrapi69.silent.mouse.model;
 
 import java.util.prefs.Preferences;
 
-import io.github.astrapi69.silent.mouse.SettingsModelBean;
-
+/**
+ * The class {@link SettingsExtensions}
+ */
 public class SettingsExtensions
 {
 

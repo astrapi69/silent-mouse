@@ -26,6 +26,10 @@ package io.github.astrapi69.silent.mouse;
 
 import javax.swing.JFrame;
 
+import io.github.astrapi69.icon.ImageIconPreloader;
+import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
+import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
+import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
 import io.github.astrapisixtynine.easy.logger.LoggingConfiguration;
 import lombok.extern.java.Log;
 
@@ -80,6 +84,7 @@ public class StartApplication
 	{
 		LoggingConfiguration.setup();
 		log.info("Application started in standalone mode.");
+		ImageIconPreloader.loadIcon("io/github/astrapi69/silk/icons/anchor.png", "Keep moving");
 		SystemTrayApplicationFrame frame = new SystemTrayApplicationFrame();
 		frame.setExtendedState(JFrame.ICONIFIED);
 		frame.pack();
