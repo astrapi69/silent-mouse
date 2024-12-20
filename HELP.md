@@ -5,8 +5,7 @@ Before creating a new version, consider the following changes:
 1. Change all SNAPSHOT versions in the following files:
     * `CHANGELOG.md`
     * `gradle.properties`
-    * `install.xml`
-    * `PureSwingSystemTray.java`
+    * `messages.properties`
 2. Set the property `createIzPackInstaller` to `true` in the `gradle.properties` file.
 3. Execute the `clean` task to delete the `build` directory.
 4. Execute the `withAllDependendiesJar` task to create the jar with the suffix `*-all.jar`.
