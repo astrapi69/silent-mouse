@@ -32,9 +32,9 @@ import java.util.prefs.Preferences;
 
 import dorkbox.systemTray.MenuItem;
 import io.github.astrapi69.model.BaseModel;
+import io.github.astrapi69.silent.mouse.extension.SettingsExtensions;
 import io.github.astrapi69.silent.mouse.i18n.Messages;
 import io.github.astrapi69.silent.mouse.model.ApplicationModelBean;
-import io.github.astrapi69.silent.mouse.model.SettingsExtensions;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.silent.mouse.panel.ApplicationPanel;
 import io.github.astrapi69.silent.mouse.panel.MouseMoveSettingsPanel;

@@ -22,9 +22,11 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse.model;
+package io.github.astrapi69.silent.mouse.extension;
 
 import java.util.prefs.Preferences;
+
+import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 
 /**
  * The class {@link SettingsExtensions}
