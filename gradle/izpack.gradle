@@ -1,3 +1,4 @@
+
 izpack {
     DirectoryProperty buildDirectoryProperty = layout.buildDirectory
     String buildDirectory = buildDirectoryProperty.get()
@@ -6,9 +7,13 @@ izpack {
     outputFile = file("$buildDirectory/distributions/$rootProject.name-${projectVersion}-installer.jar")
     compression = "deflate"
     compressionLevel = 9
-    appProperties = ["app.group"  : "$groupPackage",
-                     "app.name"   : "$rootProject.name",
-                     "app.title"  : "$rootProject.name",
+    appProperties = ["app.group": "$groupPackage",
+                     "app.name": "$rootProject.name",
+                     "app.title": "$rootProject.name",
                      "app.version": "$projectVersion",
+                     "app.java.version": "$projectSourceCompatibility",
+                     "app.author": "$projectLeaderName",
+                     "app.author.email": "$projectOrganizationEmailName" + "$ad" + "$projectOrganizationEmailDomain",
+                     "app.url": "$projectScmProviderUrl" + "$projectHolderUsername" + "$slash" + "$rootProject.name",
                      "app.subpath": "$rootProject.name-${projectVersion}"]
 }

@@ -8,16 +8,27 @@ import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.icon.ImageIconPreloader;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
+import io.github.astrapi69.silent.mouse.i18n.Messages;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
 import io.github.astrapi69.swing.panel.info.InfoModelBean;
 
+/**
+ * The class {@link DefaultSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
+ * provides functionality to manage the system tray behavior for the Silent Mouse application
+ */
 public class DefaultSystemTrayHandler implements SystemTrayHandler
 {
 
+	/**
+	 * The {@link SystemTray} instance used to manage the system tray menu and status
+	 */
 	private SystemTray systemTray;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void initialize(SystemTrayApplicationFrame frame, SettingsModelBean settingsModelBean)
 	{
@@ -67,7 +78,8 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		aboutItem.setCallback(e -> {
 			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
 				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis").labelVersion("Version:").version("2.0.1")
+				.copyright("Asterios Raptis").labelVersion("Version:")
+				.version(Messages.getString("InfoJPanel.version.value"))
 				.licence("This Software is licensed under the MIT Licence").build();
 			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
 			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
@@ -97,6 +109,9 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		systemTray.setStatus("Ready");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void shutdown()
 	{
