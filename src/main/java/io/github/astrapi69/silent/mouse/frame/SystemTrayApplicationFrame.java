@@ -30,7 +30,6 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-import dorkbox.systemTray.MenuItem;
 import io.github.astrapi69.model.BaseModel;
 import io.github.astrapi69.silent.mouse.extension.SettingsExtensions;
 import io.github.astrapi69.silent.mouse.i18n.Messages;
@@ -95,52 +94,6 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	}
 
 	/**
-	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
-	 *
-	 * @param stopItem
-	 *            the stop menu item
-	 * @param startItem
-	 *            the start menu item
-	 */
-	public void startMoving(MenuItem stopItem, MenuItem startItem)
-	{
-		if (mouseMovementManager != null)
-		{
-			log.info("Starting mouse movement...");
-			mouseMovementManager.start();
-			stopItem.setEnabled(true);
-			startItem.setEnabled(false);
-		}
-		else
-		{
-			log.warning("MouseMovementManager is null. Unable to start mouse movement.");
-		}
-	}
-
-	/**
-	 * Stops the mouse movement and tracking threads, adjusting the system tray items accordingly
-	 *
-	 * @param stopItem
-	 *            the stop menu item
-	 * @param startItem
-	 *            the start menu item
-	 */
-	public void stopMoving(MenuItem stopItem, MenuItem startItem)
-	{
-		if (mouseMovementManager != null)
-		{
-			log.info("Stopping mouse movement...");
-			mouseMovementManager.stop();
-			stopItem.setEnabled(false);
-			startItem.setEnabled(true);
-		}
-		else
-		{
-			log.warning("MouseMovementManager is null. Unable to stop mouse movement.");
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -162,7 +115,7 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
 			.build();
 		mouseMovementManager = new MouseMovementManager(settingsModelBean);
-		systemTrayHandler = new DefaultSystemTrayHandler();
+		systemTrayHandler = new DefaultSystemTrayHandler(mouseMovementManager);
 		setModel(BaseModel.of(applicationModelBean));
 		super.onBeforeInitialize();
 	}

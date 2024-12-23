@@ -24,39 +24,40 @@
  */
 package io.github.astrapi69.silent.mouse.system.tray;
 
-import javax.swing.JOptionPane;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 
-import dorkbox.systemTray.MenuItem;
-import dorkbox.systemTray.Separator;
-import dorkbox.systemTray.SystemTray;
-import io.github.astrapi69.icon.ImageIconPreloader;
-import io.github.astrapi69.model.BaseModel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
 import io.github.astrapi69.silent.mouse.i18n.Messages;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
-import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
-import io.github.astrapi69.swing.panel.info.AppInfoPanel;
-import io.github.astrapi69.swing.panel.info.InfoModelBean;
 import lombok.extern.java.Log;
 
 /**
- * The class {@link DefaultSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
- * provides functionality to manage the system tray behavior for the Silent Mouse application
+ * The class {@link JavaSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
+ * provides functionality to manage the system tray behavior using the standard java.awt.SystemTray
  */
 @Log
-public class DefaultSystemTrayHandler implements SystemTrayHandler
+public class JavaSystemTrayHandler implements SystemTrayHandler
 {
 
 	/**
-	 * The {@link SystemTray} instance used to manage the system tray menu and status
+	 * The {@link TrayIcon} instance used to manage the system tray icon and menu
 	 */
-	private SystemTray systemTray;
+	private TrayIcon trayIcon;
 
 	/** The manager class for handle the mouse movement */
 	MouseMovementManager mouseMovementManager;
 
-	public DefaultSystemTrayHandler(MouseMovementManager mouseMovementManager)
+	public JavaSystemTrayHandler(MouseMovementManager mouseMovementManager)
 	{
 		this.mouseMovementManager = mouseMovementManager;
 	}
@@ -67,81 +68,95 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 	@Override
 	public void initialize(SystemTrayApplicationFrame frame, SettingsModelBean settingsModelBean)
 	{
-		systemTray = SystemTray.get();
-		if (systemTray == null)
+		if (!SystemTray.isSupported())
 		{
-			throw new RuntimeException("Unable to load SystemTray!");
+			throw new RuntimeException("SystemTray is not supported on this platform.");
 		}
 
-		systemTray.setImage(
-			ImageIconPreloader.getIcon("io/github/astrapi69/silk/icons/anchor.png").getImage());
-		systemTray.setStatus("Initializing...");
+		SystemTray systemTray = SystemTray.getSystemTray();
+		Image iconImage = Toolkit.getDefaultToolkit()
+			.getImage(getClass().getResource("/io/github/astrapi69/silk/icons/anchor.png"));
+
+		PopupMenu popupMenu = new PopupMenu();
 
 		MenuItem startItem = new MenuItem("Start");
 		MenuItem stopItem = new MenuItem("Stop");
-		MenuItem exitItem = new MenuItem("Exit");
-		MenuItem aboutItem = new MenuItem("About");
 		MenuItem settingsItem = new MenuItem("Settings");
+		MenuItem aboutItem = new MenuItem("About");
+		MenuItem exitItem = new MenuItem("Exit");
 
-		exitItem.setCallback(e -> {
-			systemTray.shutdown();
+		// Exit menu item
+		exitItem.addActionListener(e -> {
+			shutdown();
 			System.exit(0);
 		});
 
-		if (settingsModelBean.isMoveOnStartup())
-		{
-			startMoving(stopItem, startItem);
-			systemTray.setStatus("Moving around");
-		}
+		// Settings menu item
+		settingsItem.addActionListener(e -> SwingUtilities.invokeLater(() -> {
+			int option = JOptionPane.showConfirmDialog(frame, frame.getMouseMoveSettingsPanel(),
+				"Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-		settingsItem.setCallback(e -> {
-			int option = JOptionPaneExtensions.getInfoDialogWithOkCancelButton(
-				frame.getMouseMoveSettingsPanel(), "Settings",
-				frame.getMouseMoveSettingsPanel().getCmbVariableX());
 			if (option == JOptionPane.OK_OPTION)
 			{
 				String text = frame.getMouseMoveSettingsPanel().getTxtIntervalOfSeconds().getText();
 				if (text != null)
 				{
-					settingsModelBean.setIntervalOfSeconds(Integer.valueOf(text));
+					settingsModelBean.setIntervalOfSeconds(Integer.parseInt(text));
 				}
 				frame.getModelObject()
 					.setSettingsModelBean(frame.getMouseMoveSettingsPanel().getModelObject());
 			}
+		}));
+
+		// About menu item
+		aboutItem.addActionListener(e -> SwingUtilities.invokeLater(() -> {
+			JOptionPane.showMessageDialog(frame, "Silent Mouse\nVersion: "
+				+ Messages.getString("InfoJPanel.version.value")
+				+ "\nCopyright: Asterios Raptis\nThis Software is licensed under the MIT Licence",
+				"About", JOptionPane.INFORMATION_MESSAGE);
+		}));
+
+		// Start menu item
+		startItem.addActionListener(e -> {
+			startMoving(stopItem, startItem);
+			trayIcon.setToolTip("Moving around");
 		});
 
-		aboutItem.setCallback(e -> {
-			InfoModelBean infoModelBean = InfoModelBean.builder().applicationName("silent mouse")
-				.labelApplicationName("Application name:").labelCopyright("Copyright:")
-				.copyright("Asterios Raptis").labelVersion("Version:")
-				.version(Messages.getString("InfoJPanel.version.value"))
-				.licence("This Software is licensed under the MIT Licence").build();
-			AppInfoPanel appInfoPanel = new AppInfoPanel(BaseModel.of(infoModelBean));
-			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
-		});
-
+		// Stop menu item
 		stopItem.setEnabled(frame.getMouseMovementManager().getCurrentExecutionThread() != null
 			&& !frame.getMouseMovementManager().getCurrentExecutionThread().isInterrupted());
-
-		stopItem.setCallback(e -> {
+		stopItem.addActionListener(e -> {
 			stopMoving(stopItem, startItem);
-			systemTray.setStatus("Stopped Moving");
+			trayIcon.setToolTip("Stopped Moving");
 		});
 
-		startItem.setCallback(e -> {
+		popupMenu.add(aboutItem);
+		popupMenu.add(settingsItem);
+		popupMenu.addSeparator();
+		popupMenu.add(startItem);
+		popupMenu.add(stopItem);
+		popupMenu.addSeparator();
+		popupMenu.add(exitItem);
+
+		trayIcon = new TrayIcon(iconImage, "Silent Mouse", popupMenu);
+		trayIcon.setImageAutoSize(true);
+		trayIcon.setToolTip("Initializing...");
+
+		try
+		{
+			systemTray.add(trayIcon);
+			trayIcon.setToolTip("Ready");
+		}
+		catch (AWTException e)
+		{
+			throw new RuntimeException("Unable to add TrayIcon to SystemTray", e);
+		}
+
+		if (settingsModelBean.isMoveOnStartup())
+		{
 			startMoving(stopItem, startItem);
-			systemTray.setStatus("Moving around");
-		});
-
-		systemTray.getMenu().add(aboutItem).setShortcut('b');
-		systemTray.getMenu().add(settingsItem).setShortcut('t');
-		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(startItem).setShortcut('a');
-		systemTray.getMenu().add(stopItem).setShortcut('s');
-		systemTray.getMenu().add(new Separator());
-		systemTray.getMenu().add(exitItem).setShortcut('e');
-
-		systemTray.setStatus("Ready");
+			trayIcon.setToolTip("Moving around");
+		}
 	}
 
 	/**
@@ -150,12 +165,12 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 	@Override
 	public void shutdown()
 	{
-		if (systemTray != null)
+		if (trayIcon != null)
 		{
-			systemTray.shutdown();
+			SystemTray.getSystemTray().remove(trayIcon);
+			trayIcon = null;
 		}
 	}
-
 
 	/**
 	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly

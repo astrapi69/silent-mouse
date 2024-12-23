@@ -1,6 +1,16 @@
 ## Change log
 ----------------------
 
+Version 3.1
+-------------
+
+- Introduced `JavaSystemTrayHandler` class for managing the system tray using the `java.awt.SystemTray` API.
+- Enhanced `DefaultSystemTrayHandler` with a `MouseMovementManager` dependency.
+- Simplified start/stop logic in `SystemTrayApplicationFrame`.
+- Renamed `StartApplication` class to `starter.StartApplication` and updated `MANIFEST.MF`.
+- Upgraded `logback-classic` to `1.5.15`.
+- Updated Gradle wrapper to stable version `8.12`.
+
 Version 3.0
 -------------
 
