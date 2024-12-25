@@ -1,30 +1,6 @@
-/**
- * The MIT License
- *
- * Copyright (C) 2022 Asterios Raptis
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 package io.github.astrapi69.silent.mouse.system.tray;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.Separator;
@@ -38,32 +14,17 @@ import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
 import io.github.astrapi69.swing.panel.info.InfoModelBean;
-import lombok.extern.java.Log;
 
-/**
- * The class {@link DefaultSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
- * provides functionality to manage the system tray behavior for the Silent Mouse application
- */
-@Log
-public class DefaultSystemTrayHandler implements SystemTrayHandler
+public class DorkboxSystemTrayHandler extends AbstractSystemTrayHandler
 {
 
-	/**
-	 * The {@link SystemTray} instance used to manage the system tray menu and status
-	 */
 	private SystemTray systemTray;
 
-	/** The manager class for handle the mouse movement */
-	MouseMovementManager mouseMovementManager;
-
-	public DefaultSystemTrayHandler(MouseMovementManager mouseMovementManager)
+	public DorkboxSystemTrayHandler(MouseMovementManager mouseMovementManager)
 	{
-		this.mouseMovementManager = mouseMovementManager;
+		super(mouseMovementManager);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialize(SystemTrayApplicationFrame frame, SettingsModelBean settingsModelBean)
 	{
@@ -103,7 +64,7 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 				String text = frame.getMouseMoveSettingsPanel().getTxtIntervalOfSeconds().getText();
 				if (text != null)
 				{
-					settingsModelBean.setIntervalOfSeconds(Integer.valueOf(text));
+					settingsModelBean.setIntervalOfSeconds(Integer.parseInt(text));
 				}
 				frame.getModelObject()
 					.setSettingsModelBean(frame.getMouseMoveSettingsPanel().getModelObject());
@@ -120,18 +81,8 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 			JOptionPaneExtensions.getInfoDialogWithOkCancelButton(appInfoPanel, "About", null);
 		});
 
-		stopItem.setEnabled(frame.getMouseMovementManager().getCurrentExecutionThread() != null
-			&& !frame.getMouseMovementManager().getCurrentExecutionThread().isInterrupted());
-
-		stopItem.setCallback(e -> {
-			stopMoving(stopItem, startItem);
-			systemTray.setStatus("Stopped Moving");
-		});
-
-		startItem.setCallback(e -> {
-			startMoving(stopItem, startItem);
-			systemTray.setStatus("Moving around");
-		});
+		stopItem.setCallback(e -> stopMoving(stopItem, startItem));
+		startItem.setCallback(e -> startMoving(stopItem, startItem));
 
 		systemTray.getMenu().add(aboutItem).setShortcut('b');
 		systemTray.getMenu().add(settingsItem).setShortcut('t');
@@ -144,9 +95,6 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		systemTray.setStatus("Ready");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void shutdown()
 	{
@@ -156,51 +104,45 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		}
 	}
 
+	@Override
+	protected void log(String message)
+	{
+		System.out.println("[DorkboxSystemTrayHandler] " + message);
+	}
 
 	/**
-	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
-	 *
-	 * @param stopItem
-	 *            the stop menu item
-	 * @param startItem
-	 *            the start menu item
+	 * {@inheritDoc}
 	 */
-	public void startMoving(MenuItem stopItem, MenuItem startItem)
+	public <T> void startMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (mouseMovementManager != null)
 		{
-			log.info("Starting mouse movement...");
+			log("Starting mouse movement...");
 			mouseMovementManager.start();
 			stopItem.setEnabled(true);
 			startItem.setEnabled(false);
 		}
 		else
 		{
-			log.warning("MouseMovementManager is null. Unable to start mouse movement.");
+			log("MouseMovementManager is null. Unable to start mouse movement.");
 		}
 	}
 
 	/**
-	 * Stops the mouse movement and tracking threads, adjusting the system tray items accordingly
-	 *
-	 * @param stopItem
-	 *            the stop menu item
-	 * @param startItem
-	 *            the start menu item
+	 * {@inheritDoc}
 	 */
-	public void stopMoving(MenuItem stopItem, MenuItem startItem)
+	public <T> void stopMoving(MenuItem stopItem, MenuItem startItem)
 	{
 		if (mouseMovementManager != null)
 		{
-			log.info("Stopping mouse movement...");
+			log("Stopping mouse movement...");
 			mouseMovementManager.stop();
 			stopItem.setEnabled(false);
 			startItem.setEnabled(true);
 		}
 		else
 		{
-			log.warning("MouseMovementManager is null. Unable to stop mouse movement.");
+			log("MouseMovementManager is null. Unable to stop mouse movement.");
 		}
 	}
-
 }
