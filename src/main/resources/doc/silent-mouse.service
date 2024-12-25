@@ -1,0 +1,11 @@
+[Unit]
+Description=Start silent-mouse Java Application
+After=network.target
+
+[Service]
+ExecStart=java -jar ~/app/silent-mouse/silent-mouse.jar
+Restart=always
+User=astrapi69
+
+[Install]
+WantedBy=multi-user.target
