@@ -66,6 +66,9 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	/** The manager class for handle the system tray */
 	SystemTrayHandler systemTrayHandler;
 
+	/** The flag if the system tray from dorkbox should be used */
+	boolean dorkbox;
+
 	/** The main application panel */
 	ApplicationPanel applicationPanel;
 
@@ -114,8 +117,11 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 		ApplicationModelBean applicationModelBean = ApplicationModelBean.builder()
 			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
 			.build();
+
 		mouseMovementManager = new MouseMovementManager(settingsModelBean);
+
 		systemTrayHandler = new DefaultSystemTrayHandler(mouseMovementManager);
+
 		setModel(BaseModel.of(applicationModelBean));
 		super.onBeforeInitialize();
 	}

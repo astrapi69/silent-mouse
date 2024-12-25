@@ -48,6 +48,8 @@ import lombok.extern.java.Log;
 public class DefaultSystemTrayHandler implements SystemTrayHandler
 {
 
+	MenuItem startItem;
+	MenuItem stopItem;
 	/**
 	 * The {@link SystemTray} instance used to manage the system tray menu and status
 	 */
@@ -77,8 +79,8 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 			ImageIconPreloader.getIcon("io/github/astrapi69/silk/icons/anchor.png").getImage());
 		systemTray.setStatus("Initializing...");
 
-		MenuItem startItem = new MenuItem("Start");
-		MenuItem stopItem = new MenuItem("Stop");
+		startItem = new MenuItem("Start");
+		stopItem = new MenuItem("Stop");
 		MenuItem exitItem = new MenuItem("Exit");
 		MenuItem aboutItem = new MenuItem("About");
 		MenuItem settingsItem = new MenuItem("Settings");
@@ -156,6 +158,21 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void startMoving()
+	{
+		startMoving(stopItem, startItem);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void stopMoving()
+	{
+		stopMoving(stopItem, startItem);
+	}
 
 	/**
 	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly

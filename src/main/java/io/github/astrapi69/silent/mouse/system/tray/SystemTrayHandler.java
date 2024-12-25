@@ -48,4 +48,14 @@ public interface SystemTrayHandler
 	 * Shuts down the system tray and releases resources
 	 */
 	void shutdown();
+
+	/**
+	 * Starts the mouse movement and tracking threads, adjusting the system tray items accordingly
+	 */
+	void startMoving();
+
+	/**
+	 * Stops the mouse movement and tracking threads, adjusting the system tray items accordingly
+	 */
+	void stopMoving();
 }

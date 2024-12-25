@@ -1,8 +1,13 @@
 ## Change log
 ----------------------
 
-Version 3.1
--------------
+Version 3.1-SNAPSHOT
+----------------------
+
+- Introduced `startMoving` and `stopMoving` methods in `SystemTrayHandler` interface for managing mouse movement and system tray items
+- Refactored `DefaultSystemTrayHandler` and `JavaSystemTrayHandler` to align with the updated interface
+- Standardized icon loading with `ImageIconPreloader.getIcon`
+- Added `dorkbox` flag in `SystemTrayApplicationFrame` for enhanced system tray configuration
 
 - Introduced `JavaSystemTrayHandler` class for managing the system tray using the `java.awt.SystemTray` API.
 - Enhanced `DefaultSystemTrayHandler` with a `MouseMovementManager` dependency.

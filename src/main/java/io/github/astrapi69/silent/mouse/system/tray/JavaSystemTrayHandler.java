@@ -29,12 +29,12 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import io.github.astrapi69.icon.ImageIconPreloader;
 import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
 import io.github.astrapi69.silent.mouse.i18n.Messages;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
@@ -48,6 +48,9 @@ import lombok.extern.java.Log;
 @Log
 public class JavaSystemTrayHandler implements SystemTrayHandler
 {
+	SystemTray systemTray;
+	MenuItem startItem;
+	MenuItem stopItem;
 
 	/**
 	 * The {@link TrayIcon} instance used to manage the system tray icon and menu
@@ -73,14 +76,14 @@ public class JavaSystemTrayHandler implements SystemTrayHandler
 			throw new RuntimeException("SystemTray is not supported on this platform.");
 		}
 
-		SystemTray systemTray = SystemTray.getSystemTray();
-		Image iconImage = Toolkit.getDefaultToolkit()
-			.getImage(getClass().getResource("/io/github/astrapi69/silk/icons/anchor.png"));
+		systemTray = SystemTray.getSystemTray();
+		Image iconImage = ImageIconPreloader.getIcon("io/github/astrapi69/silk/icons/anchor.png")
+			.getImage();
 
 		PopupMenu popupMenu = new PopupMenu();
 
-		MenuItem startItem = new MenuItem("Start");
-		MenuItem stopItem = new MenuItem("Stop");
+		startItem = new MenuItem("Start");
+		stopItem = new MenuItem("Stop");
 		MenuItem settingsItem = new MenuItem("Settings");
 		MenuItem aboutItem = new MenuItem("About");
 		MenuItem exitItem = new MenuItem("Exit");
@@ -118,7 +121,7 @@ public class JavaSystemTrayHandler implements SystemTrayHandler
 
 		// Start menu item
 		startItem.addActionListener(e -> {
-			startMoving(stopItem, startItem);
+			startMoving();
 			trayIcon.setToolTip("Moving around");
 		});
 
@@ -126,7 +129,7 @@ public class JavaSystemTrayHandler implements SystemTrayHandler
 		stopItem.setEnabled(frame.getMouseMovementManager().getCurrentExecutionThread() != null
 			&& !frame.getMouseMovementManager().getCurrentExecutionThread().isInterrupted());
 		stopItem.addActionListener(e -> {
-			stopMoving(stopItem, startItem);
+			stopMoving();
 			trayIcon.setToolTip("Stopped Moving");
 		});
 
@@ -154,7 +157,7 @@ public class JavaSystemTrayHandler implements SystemTrayHandler
 
 		if (settingsModelBean.isMoveOnStartup())
 		{
-			startMoving(stopItem, startItem);
+			startMoving();
 			trayIcon.setToolTip("Moving around");
 		}
 	}
@@ -193,6 +196,22 @@ public class JavaSystemTrayHandler implements SystemTrayHandler
 		{
 			log.warning("MouseMovementManager is null. Unable to start mouse movement.");
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void startMoving()
+	{
+		startMoving(stopItem, startItem);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void stopMoving()
+	{
+		stopMoving(stopItem, startItem);
 	}
 
 	/**
