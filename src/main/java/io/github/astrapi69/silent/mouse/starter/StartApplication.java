@@ -31,6 +31,7 @@ import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
 import io.github.astrapisixtynine.easy.logger.LoggingConfiguration;
+import lombok.Getter;
 import lombok.extern.java.Log;
 
 /**
@@ -39,8 +40,8 @@ import lombok.extern.java.Log;
 @Log
 public class StartApplication
 {
-
-	private static boolean running = true;
+	@Getter
+	private static boolean running = false;
 
 	/**
 	 * Main method to start the application in standalone mode
@@ -75,6 +76,7 @@ public class StartApplication
 
 		Runtime.getRuntime().addShutdownHook(new Thread(manager::stop));
 		manager.start();
+		running = true;
 	}
 
 	/**
@@ -89,6 +91,7 @@ public class StartApplication
 		frame.setExtendedState(JFrame.ICONIFIED);
 		frame.pack();
 		frame.setVisible(false);
+		running = true;
 	}
 
 	/**
