@@ -1,7 +1,7 @@
 ## Change log
 ----------------------
 
-Version 3.1-SNAPSHOT
+Version 3.1
 ----------------------
 
 - Introduced `startMoving` and `stopMoving` methods in `SystemTrayHandler` interface for managing mouse movement and system tray items
