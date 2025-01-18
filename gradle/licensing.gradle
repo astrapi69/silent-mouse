@@ -1,5 +1,5 @@
 license {
-    def inceptionYear = project.findProperty("projectInceptionYear") ?: "2024"
+    def inceptionYear = project.findProperty("projectInceptionYear") ?: "2025"
     def ownerName = project.findProperty("projectLeaderName") ?: "Asterios Raptis"
 
     ext.year = inceptionYear

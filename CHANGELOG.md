@@ -24,6 +24,7 @@ Version 3.1-SNAPSHOT
     - Replaced usage of `gradle.startParameter` for excluding tasks
     - Introduced property lookups for `projectInceptionYear` and `projectLeaderName`
 - Updated `gradle/dependencies.gradle` to use `libs.bundles.test.runtime.only`
+- Updated default `projectInceptionYear` in license configuration from `2024` to `2025`
 
 Version 3.0
 -------------
