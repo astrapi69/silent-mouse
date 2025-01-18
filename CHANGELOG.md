@@ -4,6 +4,11 @@
 Version 3.2-SNAPSHOT
 ----------------------
 
+- Started the 3.2-SNAPSHOT development cycle
+- Enhanced `silent-mouse.service` systemd service file:
+  - Added `DISPLAY=:0` environment variable for graphical support
+  - Added `ExecStartPre` command (`/usr/bin/xhost +SI:localuser:astrapi69`) to configure display permissions
+  - Updated `ExecStart` to pass `service` as an argument for proper execution mode
 
 Version 3.1
 ----------------------

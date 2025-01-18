@@ -3,7 +3,9 @@ Description=Start silent-mouse Java Application
 After=network.target
 
 [Service]
-ExecStart=java -jar ~/app/silent-mouse/silent-mouse.jar
+Environment="DISPLAY=:0"
+ExecStartPre=/usr/bin/xhost +SI:localuser:astrapi69
+ExecStart=java -jar ~/app/silent-mouse/silent-mouse.jar service
 Restart=always
 User=astrapi69
 
