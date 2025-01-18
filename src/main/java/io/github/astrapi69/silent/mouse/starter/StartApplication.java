@@ -24,6 +24,8 @@
  */
 package io.github.astrapi69.silent.mouse.starter;
 
+import java.awt.GraphicsEnvironment;
+
 import javax.swing.JFrame;
 
 import io.github.astrapi69.icon.ImageIconPreloader;
@@ -51,7 +53,9 @@ public class StartApplication
 	 */
 	public static void main(final String[] args)
 	{
-		if (args.length > 0 && "service".equalsIgnoreCase(args[0]))
+		LoggingConfiguration.setup();
+		boolean headless = GraphicsEnvironment.isHeadless();
+		if (headless || args.length > 0 && "service".equalsIgnoreCase(args[0]))
 		{
 			start(); // Service mode
 		}
@@ -66,7 +70,6 @@ public class StartApplication
 	 */
 	public static void start()
 	{
-		LoggingConfiguration.setup();
 		log.info("Service started...");
 		SettingsModelBean settingsModelBean = SettingsModelBean.builder().intervalOfSeconds(180)
 			.intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1).moveOnStartup(true)
@@ -75,6 +78,8 @@ public class StartApplication
 		MouseMovementManager manager = new MouseMovementManager(settingsModelBean);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(manager::stop));
+		Runtime.getRuntime().addShutdownHook(new Thread(StartApplication::stop));
+
 		manager.start();
 		running = true;
 	}
@@ -84,7 +89,6 @@ public class StartApplication
 	 */
 	public static void run()
 	{
-		LoggingConfiguration.setup();
 		log.info("Application started in standalone mode.");
 		ImageIconPreloader.loadIcon("io/github/astrapi69/silk/icons/anchor.png", "Keep moving");
 		SystemTrayApplicationFrame frame = new SystemTrayApplicationFrame();
@@ -99,7 +103,13 @@ public class StartApplication
 	 */
 	public static void stop()
 	{
+		if (!running)
+		{
+			log.info("Service is already stopped.");
+			return;
+		}
 		log.info("Service stopping...");
 		running = false;
 	}
+
 }

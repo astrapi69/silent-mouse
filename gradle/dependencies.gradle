@@ -12,5 +12,5 @@ dependencies {
     implementation libs.bundles.core.dependencies
 
     testImplementation libs.bundles.unit.testing
-    testRuntimeOnly libs.junit.platform.launcher
+    testRuntimeOnly libs.bundles.test.runtime.only
 }

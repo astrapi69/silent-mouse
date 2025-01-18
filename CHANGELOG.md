@@ -8,13 +8,22 @@ Version 3.1-SNAPSHOT
 - Refactored `DefaultSystemTrayHandler` and `JavaSystemTrayHandler` to align with the updated interface
 - Standardized icon loading with `ImageIconPreloader.getIcon`
 - Added `dorkbox` flag in `SystemTrayApplicationFrame` for enhanced system tray configuration
-
-- Introduced `JavaSystemTrayHandler` class for managing the system tray using the `java.awt.SystemTray` API.
-- Enhanced `DefaultSystemTrayHandler` with a `MouseMovementManager` dependency.
-- Simplified start/stop logic in `SystemTrayApplicationFrame`.
-- Renamed `StartApplication` class to `starter.StartApplication` and updated `MANIFEST.MF`.
-- Upgraded `logback-classic` to `1.5.15`.
-- Updated Gradle wrapper to stable version `8.12`.
+- Introduced `JavaSystemTrayHandler` class for managing the system tray using the `java.awt.SystemTray` API
+- Enhanced `DefaultSystemTrayHandler` with a `MouseMovementManager` dependency
+- Simplified start/stop logic in `SystemTrayApplicationFrame`
+- Renamed `StartApplication` class to `starter.StartApplication` and updated `MANIFEST.MF`
+- Upgraded `logback-classic` to `1.5.15`
+- Updated Gradle wrapper to stable version `8.12`
+- Refactored `StartApplication` to support headless environments by integrating `GraphicsEnvironment.isHeadless` check
+- Centralized `LoggingConfiguration.setup` call to `main` method, improving initialization logic
+- Added shutdown hook for `StartApplication::stop` for proper cleanup during termination
+- Made `stop` method idempotent to prevent redundant operations
+- Removed redundant `LoggingConfiguration.setup` calls from `start` and `run` methods
+- Updated `gradle-plugin-spotless` version from `7.0.1` to `7.0.2` in `libs.versions.toml`
+- Refactored `license` plugin configuration:
+    - Replaced usage of `gradle.startParameter` for excluding tasks
+    - Introduced property lookups for `projectInceptionYear` and `projectLeaderName`
+- Updated `gradle/dependencies.gradle` to use `libs.bundles.test.runtime.only`
 
 Version 3.0
 -------------
