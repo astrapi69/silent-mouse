@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 
 // Resolve properties during configuration
-def mainClassName = project.findProperty('mainClass') ?: 'io.github.astrapi69.swing.app.StartApplication'
+def mainClassName = project.findProperty('mainClass') ?: 'io.github.astrapi69.silent.mouse.starter.StartApplication'
 def createIzPackInstallerStringProperty = project.findProperty('createIzPackInstaller') ?: 'false'
 def createIzPackInstaller = createIzPackInstallerStringProperty.toBoolean()
 def releaseVersion = !version.endsWith("SNAPSHOT")
