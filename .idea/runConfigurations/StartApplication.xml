@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="StartApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="io.github.astrapi69.silent.mouse.starter.StartApplication" />
+    <module name="io.github.astrapi69.silent-mouse.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="io.github.astrapi69.silent.mouse.system.tray.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <extension name="de.eudaemon.ideaswag.SwingspectorExtension">
+      <Swingspector>
+        <keystroke code="59" modifiers="130" />
+        <active value="false" />
+        <timeout>5.0</timeout>
+      </Swingspector>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

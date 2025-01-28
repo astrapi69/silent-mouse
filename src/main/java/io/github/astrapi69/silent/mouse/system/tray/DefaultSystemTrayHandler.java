@@ -24,6 +24,10 @@
  */
 package io.github.astrapi69.silent.mouse.system.tray;
 
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import javax.swing.JOptionPane;
 
 import dorkbox.systemTray.MenuItem;
@@ -84,6 +88,15 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		MenuItem exitItem = new MenuItem("Exit");
 		MenuItem aboutItem = new MenuItem("About");
 		MenuItem settingsItem = new MenuItem("Settings");
+		MenuItem networkInfoItem = new MenuItem("Network Info");
+
+		networkInfoItem.setCallback(e -> {
+			String networkInfo = getNetworkInformation();
+			JOptionPane.showMessageDialog(null, networkInfo, "Network Information",
+				JOptionPane.INFORMATION_MESSAGE);
+		});
+
+		systemTray.getMenu().add(networkInfoItem).setShortcut('n');
 
 		exitItem.setCallback(e -> {
 			systemTray.shutdown();
@@ -144,6 +157,43 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		systemTray.getMenu().add(exitItem).setShortcut('e');
 
 		systemTray.setStatus("Ready");
+	}
+
+
+	public static String getConnectedIPAddress()
+	{
+		String ipAddress = "Unable to determine IP address";
+		try (Socket socket = new Socket("8.8.8.8", 53))
+		{
+			// Query the socket's local address
+			InetAddress localAddress = socket.getLocalAddress();
+			ipAddress = localAddress.getHostAddress();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return ipAddress;
+	}
+
+	private String getNetworkInformation()
+	{
+		StringBuilder networkInfo = new StringBuilder();
+		try
+		{
+			String connectedIPAddress = getConnectedIPAddress();
+			InetAddress localHost = InetAddress.getLocalHost();
+			networkInfo.append("Host Name: ").append(localHost.getHostName())
+				.append(System.lineSeparator());
+			networkInfo.append("IP Address: ").append(localHost.getHostAddress())
+				.append(System.lineSeparator());
+			networkInfo.append("Network IP Address: ").append(connectedIPAddress);
+		}
+		catch (UnknownHostException e)
+		{
+			networkInfo.append("Unable to retrieve network information: ").append(e.getMessage());
+		}
+		return networkInfo.toString();
 	}
 
 	/**

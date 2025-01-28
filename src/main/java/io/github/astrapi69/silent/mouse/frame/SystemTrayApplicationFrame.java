@@ -39,7 +39,9 @@ import io.github.astrapi69.silent.mouse.panel.ApplicationPanel;
 import io.github.astrapi69.silent.mouse.panel.MouseMoveSettingsPanel;
 import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
 import io.github.astrapi69.silent.mouse.system.tray.DefaultSystemTrayHandler;
+import io.github.astrapi69.silent.mouse.system.tray.JavaSystemTrayHandler;
 import io.github.astrapi69.silent.mouse.system.tray.SystemTrayHandler;
+import io.github.astrapi69.silent.mouse.system.tray.SystemTrayType;
 import io.github.astrapi69.swing.base.ApplicationPanelFrame;
 import io.github.astrapi69.swing.base.BasePanel;
 import lombok.AccessLevel;
@@ -119,8 +121,14 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			.build();
 
 		mouseMovementManager = new MouseMovementManager(settingsModelBean);
-
-		systemTrayHandler = new DefaultSystemTrayHandler(mouseMovementManager);
+		if (getSettingsModelBean().getSystemTrayType().equals(SystemTrayType.DORKBOX))
+		{
+			systemTrayHandler = new DefaultSystemTrayHandler(mouseMovementManager);
+		}
+		else
+		{
+			systemTrayHandler = new JavaSystemTrayHandler(mouseMovementManager);
+		}
 
 		setModel(BaseModel.of(applicationModelBean));
 		super.onBeforeInitialize();

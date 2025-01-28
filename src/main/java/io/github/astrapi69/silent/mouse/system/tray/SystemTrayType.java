@@ -22,40 +22,26 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.github.astrapi69.silent.mouse.model;
-
-import io.github.astrapi69.silent.mouse.system.tray.SystemTrayType;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+package io.github.astrapi69.silent.mouse.system.tray;
 
 /**
- * The {@link SettingsModelBean} class represents the configuration settings for mouse movements,
- * including axis movements, interval settings, and whether the mouse movement starts on startup
+ * The enum class for the type of the system tray
  */
-@Data
-@SuperBuilder(toBuilder = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class SettingsModelBean
+public enum SystemTrayType
 {
-	/** X-axis movement value */
-	@Builder.Default
-	Integer xAxis = 1;
-	/** Y-axis movement value */
-	@Builder.Default
-	Integer yAxis = 1;
-	/** Interval in seconds for mouse movement */
-	@Builder.Default
-	Integer intervalOfSeconds = 10;
-	/** Interval in seconds for checking mouse movements */
-	@Builder.Default
-	Integer intervalOfMouseMovementsCheckInSeconds = 5;
-	/** Flag for enabling mouse movement on startup */
-	@Builder.Default
-	boolean moveOnStartup = true;
-	/** the system tray type value */
-	@Builder.Default
-	SystemTrayType systemTrayType = SystemTrayType.DORKBOX;
+
+	/**
+	 * The system tray type dorkbox
+	 */
+	DORKBOX,
+
+	/**
+	 * The system tray type java
+	 */
+	JAVA,
+
+	/**
+	 * The value if the system tray type is unknown
+	 */
+	UNKNOWN;
 }

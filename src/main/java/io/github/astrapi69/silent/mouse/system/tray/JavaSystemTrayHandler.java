@@ -29,9 +29,14 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
 
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import io.github.astrapi69.icon.ImageIconPreloader;
@@ -48,6 +53,73 @@ import lombok.extern.java.Log;
 @Log
 public class JavaSystemTrayHandler implements SystemTrayHandler
 {
+
+	public static void main(String[] args)
+	{
+		String iconPath = "io/github/astrapi69/silk/icons/anchor.png";
+		ImageIconPreloader.preloadIcon(iconPath);
+		if (!SystemTray.isSupported())
+		{
+			System.out.println("SystemTray is not supported");
+			return;
+		}
+
+		SystemTray tray = SystemTray.getSystemTray();
+
+		// Load the tray icon image
+
+		Image image = Toolkit.getDefaultToolkit().getImage(iconPath);
+		ImageIcon imageIcon = ImageIconPreloader.getIcon(iconPath);
+		Image iconImage;
+		if (imageIcon == null && image != null)
+		{
+			iconImage = image;
+		}
+		else
+		{
+			iconImage = imageIcon.getImage();
+
+		}
+
+		// Create a TrayIcon
+		TrayIcon trayIcon = new TrayIcon(iconImage, "Test Tray");
+		trayIcon.setImageAutoSize(true);
+		trayIcon.setToolTip("Right-click for menu");
+
+
+		// Create a JPopupMenu for Swing
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem exitMenuItem = new JMenuItem("Exit");
+		exitMenuItem.addActionListener((ActionEvent e) -> System.exit(0));
+		popupMenu.add(exitMenuItem);
+		popupMenu.setToolTipText("popup-menu");
+
+		// Add mouse listener to show the popup menu
+		trayIcon.addMouseListener(new java.awt.event.MouseAdapter()
+		{
+			@Override
+			public void mouseReleased(java.awt.event.MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					popupMenu.setLocation(e.getX(), e.getY());
+					popupMenu.setInvoker(popupMenu);
+					popupMenu.setVisible(true);
+				}
+			}
+		});
+
+		try
+		{
+			tray.add(trayIcon);
+		}
+		catch (AWTException e)
+		{
+			System.err.println("TrayIcon could not be added.");
+		}
+	}
+
+
 	SystemTray systemTray;
 	MenuItem startItem;
 	MenuItem stopItem;

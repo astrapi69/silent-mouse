@@ -7,10 +7,10 @@ file-worker-version = "19.0"
 gradle-izpack-plugin-version = "3.2"
 gradle-plugin-grgit-version = "5.3.0"
 gradle-plugin-license-version = "0.16.1"
-gradle-plugin-lombok-version = "8.11"
+gradle-plugin-lombok-version = "8.12"
 gradle-plugin-spotless-version = "7.0.2"
 gradle-plugin-version-catalog-update-version = "0.8.5"
-gradle-plugin-versions-version = "0.51.0"
+gradle-plugin-versions-version = "0.52.0"
 icon-img-extensions-version = "4.1"
 izpack-ant-version = "5.2.3"
 jobj-core-version = "9.1"
@@ -23,6 +23,7 @@ meanbean-version = "3.0.0-M9"
 menu-action-version = "4.1"
 miglayout-swing-version = "11.4.2"
 model-data-version = "3.1"
+net-extensions-version = "6.0"
 resourcebundle-core-version = "6.0"
 roboter-version = "2"
 silk-icon-theme-version = "1"
@@ -56,6 +57,7 @@ meanbean = { module = "com.github.meanbeanlib:meanbean", version.ref = "meanbean
 menu-action = { module = "io.github.astrapi69:menu-action", version.ref = "menu-action-version" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout-swing-version" }
 model-data = { module = "io.github.astrapi69:model-data", version.ref = "model-data-version" }
+net-extensions = { module = "io.github.astrapi69:net-extensions", version.ref = "net-extensions-version" }
 resourcebundle-core = { module = "io.github.astrapi69:resourcebundle-core", version.ref = "resourcebundle-core-version" }
 roboter = { module = "io.github.astrapi69:roboter", version.ref = "roboter-version" }
 silk-icon-theme = { module = "io.github.astrapi69:silk-icon-theme", version.ref = "silk-icon-theme-version" }
@@ -88,6 +90,7 @@ core-dependencies = [
     "menu-action",
     "miglayout-swing",
     "model-data",
+    "net-extensions",
     "resourcebundle-core",
     "roboter",
     "silk-icon-theme",

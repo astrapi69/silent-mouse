@@ -20,6 +20,8 @@
  */
 module io.github.astrapisixtynine.silent.mouse
 {
+	requires static lombok;
+	requires java.logging;
 	requires java.desktop;
 	requires java.prefs;
 	requires com.miglayout.swing;
@@ -38,6 +40,5 @@ module io.github.astrapisixtynine.silent.mouse
 	requires swing.model.components.main;
 	requires model.data;
 	requires io.github.astrapisixtynine.easy.logger;
-	requires static lombok;
-	requires java.logging;
+	requires io.github.astrapisixtynine.net.extensions;
 }
