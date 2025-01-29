@@ -24,9 +24,10 @@
  */
 package io.github.astrapi69.silent.mouse.system.tray;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.URISyntaxException;
 
 import javax.swing.JOptionPane;
 
@@ -35,9 +36,12 @@ import dorkbox.systemTray.Separator;
 import dorkbox.systemTray.SystemTray;
 import io.github.astrapi69.icon.ImageIconPreloader;
 import io.github.astrapi69.model.BaseModel;
+import io.github.astrapi69.net.ip.IpInfo;
+import io.github.astrapi69.net.ip.IpInfoExtensions;
 import io.github.astrapi69.silent.mouse.frame.SystemTrayApplicationFrame;
 import io.github.astrapi69.silent.mouse.i18n.Messages;
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
+import io.github.astrapi69.silent.mouse.panel.IpInfoPanel;
 import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
 import io.github.astrapi69.swing.dialog.JOptionPaneExtensions;
 import io.github.astrapi69.swing.panel.info.AppInfoPanel;
@@ -90,14 +94,6 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		MenuItem settingsItem = new MenuItem("Settings");
 		MenuItem networkInfoItem = new MenuItem("Network Info");
 
-		networkInfoItem.setCallback(e -> {
-			String networkInfo = getNetworkInformation();
-			JOptionPane.showMessageDialog(null, networkInfo, "Network Information",
-				JOptionPane.INFORMATION_MESSAGE);
-		});
-
-		systemTray.getMenu().add(networkInfoItem).setShortcut('n');
-
 		exitItem.setCallback(e -> {
 			systemTray.shutdown();
 			System.exit(0);
@@ -148,12 +144,33 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 			systemTray.setStatus("Moving around");
 		});
 
+		networkInfoItem.setCallback(e -> {
+			IpInfo ipInfo = null;
+			try
+			{
+				ipInfo = getIpInfo();
+				IpInfoPanel ipInfoPanel = new IpInfoPanel(BaseModel.of(ipInfo));
+				JOptionPaneExtensions.getInfoDialogWithOkCancelButton(ipInfoPanel, "IP Information",
+					null);
+			}
+			catch (IOException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+			catch (URISyntaxException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+		});
+
+
 		systemTray.getMenu().add(aboutItem).setShortcut('b');
 		systemTray.getMenu().add(settingsItem).setShortcut('t');
 		systemTray.getMenu().add(new Separator());
 		systemTray.getMenu().add(startItem).setShortcut('a');
 		systemTray.getMenu().add(stopItem).setShortcut('s');
 		systemTray.getMenu().add(new Separator());
+		systemTray.getMenu().add(networkInfoItem).setShortcut('n');
 		systemTray.getMenu().add(exitItem).setShortcut('e');
 
 		systemTray.setStatus("Ready");
@@ -176,24 +193,12 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		return ipAddress;
 	}
 
-	private String getNetworkInformation()
+	private IpInfo getIpInfo() throws IOException, URISyntaxException
 	{
-		StringBuilder networkInfo = new StringBuilder();
-		try
-		{
-			String connectedIPAddress = getConnectedIPAddress();
-			InetAddress localHost = InetAddress.getLocalHost();
-			networkInfo.append("Host Name: ").append(localHost.getHostName())
-				.append(System.lineSeparator());
-			networkInfo.append("IP Address: ").append(localHost.getHostAddress())
-				.append(System.lineSeparator());
-			networkInfo.append("Network IP Address: ").append(connectedIPAddress);
-		}
-		catch (UnknownHostException e)
-		{
-			networkInfo.append("Unable to retrieve network information: ").append(e.getMessage());
-		}
-		return networkInfo.toString();
+		return IpInfo.builder().localIPAddress(IpInfoExtensions.getLocalIPAddress())
+			.routerIPAddress(IpInfoExtensions.getRouterIPAddress())
+			.externalIPAddress(IpInfoExtensions.getExternalIPAddress())
+			.localNetworkIPAddress(IpInfoExtensions.getLocalNetworkIPAddress()).build();
 	}
 
 	/**

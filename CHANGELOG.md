@@ -4,28 +4,33 @@
 Version 3.2-SNAPSHOT
 ----------------------
 
-## Added
-- `SystemTrayType` enum to manage configurable system tray implementations (`DORKBOX`, `JAVA`, `UNKNOWN`).
-- `SystemTrayType` field to `SettingsModelBean` with a default value of `DORKBOX`.
-- Method to display network information (IP address and hostname) in `DefaultSystemTrayHandler`.
-- Conditional logic in `SystemTrayApplicationFrame` for selecting the system tray handler based on `SystemTrayType`.
-- Demo functionality in `JavaSystemTrayHandler` to showcase tray icon and popup menu features.
-- IntelliJ run configurations for `StartApplication` and `StartApplication as service`.
-- Enhanced `silent-mouse.service` systemd service file:
+## [Unreleased]
+
+### Features
+- Implemented `IpInfoPanel` for structured network information display in a UI panel.
+- Integrated `IpInfoPanel` into the system tray menu under "Network Info" in `DefaultSystemTrayHandler`.
+- Added `SystemTrayType` enum to manage configurable system tray implementations (`DORKBOX`, `JAVA`, `UNKNOWN`).
+- Introduced `SystemTrayType` field in `SettingsModelBean`, defaulting to `DORKBOX`.
+- Added conditional logic in `SystemTrayApplicationFrame` to select the appropriate system tray handler based on `SystemTrayType`.
+- Created `JavaSystemTrayHandler` with demo functionality for tray icon and popup menu features.
+
+### Enhancements
+- Replaced string-based network info with an interactive UI panel.
+- Refactored `getNetworkInformation` method to utilize the `IpInfo` model.
+- Improved `silent-mouse.service` systemd service file:
   - Added `DISPLAY=:0` environment variable for graphical support.
-  - Added `ExecStartPre` command (`/usr/bin/xhost +SI:localuser:astrapi69`) to configure display permissions.
+  - Included `ExecStartPre` command (`/usr/bin/xhost +SI:localuser:astrapi69`) to configure display permissions.
   - Updated `ExecStart` to pass `service` as an argument for proper execution mode.
 
-## Updated
-- `libs.versions.toml` to include the new `net-extensions` dependency.
+### Updates
+- Updated `libs.versions.toml` to include the latest `net-extensions` dependency (`6.1`).
 
-## Removed
-- Redundant Gradle run configurations: `dependencyUpdates`, `spotlessJavaApply`, and `spotlessMiscApply`.
+### Removals
+- Removed redundant Gradle run configurations: `dependencyUpdates`, `spotlessJavaApply`, and `spotlessMiscApply`.
 
-## Development
+### Development
 - Started the `3.2-SNAPSHOT` development cycle.
-
-This update enhances configurability, improves usability, and extends functionality for system tray operations and service configurations.
+- Added IntelliJ run configurations for `StartApplication` and `StartApplication as service`.
 
 Version 3.1
 ----------------------
