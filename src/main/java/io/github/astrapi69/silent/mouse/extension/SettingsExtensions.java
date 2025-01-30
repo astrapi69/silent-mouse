@@ -27,6 +27,7 @@ package io.github.astrapi69.silent.mouse.extension;
 import java.util.prefs.Preferences;
 
 import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
+import io.github.astrapi69.silent.mouse.system.tray.SystemTrayType;
 
 /**
  * The class {@link SettingsExtensions}
@@ -63,6 +64,31 @@ public class SettingsExtensions
 	 * Key for the move on startup setting in preferences
 	 */
 	public static final String MOVE_ON_STARTUP = "moveOnStartup";
+
+	/**
+	 * Key for the systemTrayType setting in preferences
+	 */
+	public static final String SYSTEM_TRAY_TYPE = "systemTrayType";
+
+	/**
+	 * The constant for the default settings of the application
+	 */
+	public static final SettingsModelBean DEFAULT_SETTINGS = SettingsModelBean.builder()
+		.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
+		.moveOnStartup(true).systemTrayType(SystemTrayType.DORKBOX).build();
+
+	/**
+	 * Sets model from preferences.
+	 *
+	 * @param applicationPreferences
+	 *            the application preferences
+	 * @return the model from preferences
+	 */
+	public static SettingsModelBean setModelFromPreferences(
+		final Preferences applicationPreferences)
+	{
+		return setModelFromPreferences(DEFAULT_SETTINGS, applicationPreferences);
+	}
 
 	/**
 	 * Sets model from preferences.
@@ -130,6 +156,18 @@ public class SettingsExtensions
 		{
 			boolean moveOnStartup = Boolean.parseBoolean(moveOnStartupAsString);
 			modelObject.setMoveOnStartup(moveOnStartup);
+		}
+		String systemTrayTypeAsString = applicationPreferences
+			.get(SettingsExtensions.SYSTEM_TRAY_TYPE, NOT_SET);
+		if (NOT_SET.equals(systemTrayTypeAsString))
+		{
+			applicationPreferences.put(SettingsExtensions.SYSTEM_TRAY_TYPE,
+				SystemTrayType.DORKBOX.name());
+		}
+		else
+		{
+			SystemTrayType systemTrayType = SystemTrayType.valueOf(systemTrayTypeAsString);
+			modelObject.setSystemTrayType(systemTrayType);
 		}
 		return modelObject;
 	}

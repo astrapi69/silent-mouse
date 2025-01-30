@@ -24,10 +24,6 @@
  */
 package io.github.astrapi69.silent.mouse.frame;
 
-import java.awt.Point;
-import java.time.LocalDateTime;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
 import io.github.astrapi69.model.BaseModel;
@@ -38,7 +34,7 @@ import io.github.astrapi69.silent.mouse.model.SettingsModelBean;
 import io.github.astrapi69.silent.mouse.panel.ApplicationPanel;
 import io.github.astrapi69.silent.mouse.panel.MouseMoveSettingsPanel;
 import io.github.astrapi69.silent.mouse.robot.MouseMovementManager;
-import io.github.astrapi69.silent.mouse.system.tray.DefaultSystemTrayHandler;
+import io.github.astrapi69.silent.mouse.system.tray.DorkboxSystemTrayHandler;
 import io.github.astrapi69.silent.mouse.system.tray.JavaSystemTrayHandler;
 import io.github.astrapi69.silent.mouse.system.tray.SystemTrayHandler;
 import io.github.astrapi69.silent.mouse.system.tray.SystemTrayType;
@@ -68,14 +64,8 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 	/** The manager class for handle the system tray */
 	SystemTrayHandler systemTrayHandler;
 
-	/** The flag if the system tray from dorkbox should be used */
-	boolean dorkbox;
-
 	/** The main application panel */
 	ApplicationPanel applicationPanel;
-
-	/** Map to track the mouse's positions over time */
-	NavigableMap<LocalDateTime, Point> mouseTracks;
 
 	/** Preferences object to store and retrieve user settings */
 	Preferences applicationPreferences;
@@ -109,37 +99,36 @@ public class SystemTrayApplicationFrame extends ApplicationPanelFrame<Applicatio
 			instance = this;
 		}
 		// initialize model and model object
-		mouseTracks = new TreeMap<>();
 		applicationPreferences = Preferences.userRoot()
 			.node(SystemTrayApplicationFrame.class.getName());
 
-		settingsModelBean = SettingsExtensions.setModelFromPreferences(SettingsModelBean.builder()
-			.intervalOfSeconds(180).intervalOfMouseMovementsCheckInSeconds(90).xAxis(1).yAxis(1)
-			.moveOnStartup(false).build(), applicationPreferences);
+		settingsModelBean = SettingsExtensions.setModelFromPreferences(applicationPreferences);
 		ApplicationModelBean applicationModelBean = ApplicationModelBean.builder()
 			.settingsModelBean(settingsModelBean).title(Messages.getString("mainframe.title"))
 			.build();
+		setModel(BaseModel.of(applicationModelBean));
 
 		mouseMovementManager = new MouseMovementManager(settingsModelBean);
 		if (getSettingsModelBean().getSystemTrayType().equals(SystemTrayType.DORKBOX))
 		{
-			systemTrayHandler = new DefaultSystemTrayHandler(mouseMovementManager);
+			systemTrayHandler = new DorkboxSystemTrayHandler(mouseMovementManager);
 		}
 		else
 		{
 			systemTrayHandler = new JavaSystemTrayHandler(mouseMovementManager);
 		}
-
-		setModel(BaseModel.of(applicationModelBean));
+		systemTrayHandler.initialize(this, settingsModelBean);
 		super.onBeforeInitialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onInitializeComponents()
 	{
 		super.onInitializeComponents();
 		mouseMoveSettingsPanel = new MouseMoveSettingsPanel(BaseModel.of(settingsModelBean));
-		systemTrayHandler.initialize(this, settingsModelBean);
 	}
 
 	/**

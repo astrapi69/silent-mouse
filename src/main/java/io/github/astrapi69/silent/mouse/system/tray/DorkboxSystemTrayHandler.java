@@ -25,8 +25,6 @@
 package io.github.astrapi69.silent.mouse.system.tray;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.URISyntaxException;
 
 import javax.swing.JOptionPane;
@@ -49,15 +47,16 @@ import io.github.astrapi69.swing.panel.info.InfoModelBean;
 import lombok.extern.java.Log;
 
 /**
- * The class {@link DefaultSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
+ * The class {@link DorkboxSystemTrayHandler} implements the {@link SystemTrayHandler} interface and
  * provides functionality to manage the system tray behavior for the Silent Mouse application
  */
 @Log
-public class DefaultSystemTrayHandler implements SystemTrayHandler
+public class DorkboxSystemTrayHandler implements SystemTrayHandler
 {
 
 	MenuItem startItem;
 	MenuItem stopItem;
+	IpInfo ipInfo;
 	/**
 	 * The {@link SystemTray} instance used to manage the system tray menu and status
 	 */
@@ -66,7 +65,7 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 	/** The manager class for handle the mouse movement */
 	MouseMovementManager mouseMovementManager;
 
-	public DefaultSystemTrayHandler(MouseMovementManager mouseMovementManager)
+	public DorkboxSystemTrayHandler(MouseMovementManager mouseMovementManager)
 	{
 		this.mouseMovementManager = mouseMovementManager;
 	}
@@ -145,11 +144,9 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		});
 
 		networkInfoItem.setCallback(e -> {
-			IpInfo ipInfo = null;
 			try
 			{
-				ipInfo = getIpInfo();
-				IpInfoPanel ipInfoPanel = new IpInfoPanel(BaseModel.of(ipInfo));
+				IpInfoPanel ipInfoPanel = new IpInfoPanel(BaseModel.of(getIpInfo()));
 				JOptionPaneExtensions.getInfoDialogWithOkCancelButton(ipInfoPanel, "IP Information",
 					null);
 			}
@@ -163,7 +160,6 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 			}
 		});
 
-
 		systemTray.getMenu().add(aboutItem).setShortcut('b');
 		systemTray.getMenu().add(settingsItem).setShortcut('t');
 		systemTray.getMenu().add(new Separator());
@@ -176,29 +172,16 @@ public class DefaultSystemTrayHandler implements SystemTrayHandler
 		systemTray.setStatus("Ready");
 	}
 
-
-	public static String getConnectedIPAddress()
+	public IpInfo getIpInfo() throws IOException, URISyntaxException
 	{
-		String ipAddress = "Unable to determine IP address";
-		try (Socket socket = new Socket("8.8.8.8", 53))
+		if (this.ipInfo == null)
 		{
-			// Query the socket's local address
-			InetAddress localAddress = socket.getLocalAddress();
-			ipAddress = localAddress.getHostAddress();
+			this.ipInfo = IpInfo.builder().localIPAddress(IpInfoExtensions.getLocalIPAddress())
+				.routerIPAddress(IpInfoExtensions.getRouterIPAddress())
+				.externalIPAddress(IpInfoExtensions.getExternalIPAddress())
+				.localNetworkIPAddress(IpInfoExtensions.getLocalNetworkIPAddress()).build();
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return ipAddress;
-	}
-
-	private IpInfo getIpInfo() throws IOException, URISyntaxException
-	{
-		return IpInfo.builder().localIPAddress(IpInfoExtensions.getLocalIPAddress())
-			.routerIPAddress(IpInfoExtensions.getRouterIPAddress())
-			.externalIPAddress(IpInfoExtensions.getExternalIPAddress())
-			.localNetworkIPAddress(IpInfoExtensions.getLocalNetworkIPAddress()).build();
+		return this.ipInfo;
 	}
 
 	/**
