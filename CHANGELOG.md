@@ -1,10 +1,8 @@
 ## Change log
 ----------------------
 
-Version 3.2-SNAPSHOT
+Version 3.2
 ----------------------
-
-## [Unreleased]
 
 ### Features
 - Implemented `IpInfoPanel` for structured network information display in a UI panel.
